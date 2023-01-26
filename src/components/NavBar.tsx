@@ -49,6 +49,11 @@ export function NavBar() {
             <li>
               <ThemeToggleButton />
             </li>
+            <li>
+              <label htmlFor='my-drawer' tabIndex={0} className='cursor-pointer'>
+                科目
+              </label>
+            </li>
           </ul>
         </div>
       </div>
@@ -56,7 +61,7 @@ export function NavBar() {
   );
 }
 
-const THEMES = ['corporate', 'night', 'winter', 'light', 'business', 'dark'];
+const THEMES = ['corporate', 'dark'];
 function ThemeToggleButton() {
   const [themeIndex, setThemeIndex] = useLocalStorageState('scut-xtk-theme', {
     defaultValue: 0,

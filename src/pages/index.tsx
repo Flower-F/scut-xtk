@@ -1,11 +1,9 @@
 import Head from 'next/head';
-import Link from 'next/link';
+import type { ReactElement } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
-
 import { api } from '../utils/api';
 import type { NextPageWithLayout } from './_app';
 import { AdminLayout } from '../layouts/AdminLayout';
-import type { ReactElement } from 'react';
 
 const HomePage: NextPageWithLayout = () => {
   const hello = api.example.hello.useQuery({ text: 'from tRPC' });
@@ -17,9 +15,10 @@ const HomePage: NextPageWithLayout = () => {
         <meta name='description' content='基于课程知识点的习题库' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <>
-        <button className='btn'>hello world</button>
-      </>
+      <div>
+        {/* <button className='btn'>hello world</button> */}
+        hello world
+      </div>
     </>
   );
 };
