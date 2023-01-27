@@ -2,8 +2,13 @@ import { z } from 'zod';
 
 export const registerInputSchema = z.object({
   email: z.string().email(),
-  name: z.string().min(0, '名字不能为空'),
-  password: z.string(),
+  name: z.string().min(1, '姓名不能为空'),
+  password: z
+    .string()
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      '密码长度至少为8，且至少含有一个字母和一个数字和一个特殊字符'
+    ),
   password2: z.string(),
 });
 

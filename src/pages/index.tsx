@@ -7,17 +7,10 @@ import { AdminLayout } from '../layouts/AdminLayout';
 
 const HomePage: NextPageWithLayout = () => {
   return (
-    <>
-      <Head>
-        <title>华南理工大学习题库</title>
-        <meta name='description' content='基于课程知识点的习题库' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-      <div>
-        {/* <button className='btn'>hello world</button> */}
-        hello world
-      </div>
-    </>
+    <div>
+      {/* <button className='btn'>hello world</button> */}
+      hello world
+    </div>
   );
 };
 

@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { TRPCError } from '@trpc/server';
 import { hash } from 'bcryptjs';
 import { registerInputSchema } from '../../../schemas/user';
@@ -15,19 +16,6 @@ export const userRouter = createTRPCRouter({
     }
 
     try {
-      const exists = await ctx.prisma.user.findFirst({
-        where: {
-          email,
-        },
-      });
-
-      if (exists) {
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: '用户已存在',
-        });
-      }
-
       const passwordHash = await hash(password, 12);
       await ctx.prisma.user.create({
         data: {
@@ -37,6 +25,15 @@ export const userRouter = createTRPCRouter({
         },
       });
     } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: '用户已存在',
+          });
+        }
+      }
+
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: '服务器出现未知错误',

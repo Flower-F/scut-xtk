@@ -1,23 +1,22 @@
 import { Bars3Icon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { useLocalStorageState } from 'ahooks';
 import { useRouter } from 'next/router';
+import { ThemeToggleButton } from '../../components/ThemeToggleButton';
 import LogoImage from '../../../public/images/logo.png';
 
 export function NavBar() {
   const router = useRouter();
 
   return (
-    <header className='navbar bg-primary text-primary-content'>
+    <header className='navbar bg-primary'>
       <div className='navbar-start w-full'>
         <Link href='/' className='rounded-md px-2'>
           <Image src={LogoImage} className='h-16 w-auto sm:h-20' alt='Logo' priority />
         </Link>
       </div>
 
-      <div className='navbar-end hidden text-gray-100 lg:flex'>
+      <div className='navbar-end hidden text-gray-100 md:flex'>
         <ul className='menu menu-horizontal px-1'>
           <li>
             <Link href='/'>首页</Link>
@@ -34,7 +33,7 @@ export function NavBar() {
         </ul>
       </div>
 
-      <div className='navbar-end block lg:hidden'>
+      <div className='navbar-end md:hidden'>
         <div className='dropdown-end dropdown'>
           <label tabIndex={0} className='btn-ghost btn'>
             <Bars3Icon className='h-6 w-6 text-gray-100' />
@@ -63,27 +62,5 @@ export function NavBar() {
         </div>
       </div>
     </header>
-  );
-}
-
-const THEMES = ['corporate', 'dark'];
-function ThemeToggleButton() {
-  const [themeIndex, setThemeIndex] = useLocalStorageState('scut-xtk-theme', {
-    defaultValue: 0,
-  });
-
-  function handleThemeChange() {
-    const nextThemeIndex = (themeIndex + 1) % THEMES.length;
-    setThemeIndex(nextThemeIndex);
-  }
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', THEMES[themeIndex] || 'corporate');
-  }, [themeIndex]);
-
-  return (
-    <label tabIndex={0} className='cursor-pointer' onClick={() => handleThemeChange()}>
-      主题
-    </label>
   );
 }

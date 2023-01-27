@@ -2,28 +2,33 @@ import md5 from 'md5';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EnvelopeIcon, LockClosedIcon, UserIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, LockClosedIcon, UserIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from './_app';
 import type { RegisterInput } from '../schemas/user';
 import { registerInputSchema } from '../schemas/user';
 import { api } from '../utils/api';
 import { AuthLayout } from '../layouts/AuthLayout';
+import { ErrorAlert } from '../components/ErrorAlert';
 
 const RegisterPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { handleSubmit, register } = useForm<RegisterInput>({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<RegisterInput>({
     resolver: zodResolver(registerInputSchema),
   });
 
   const { mutateAsync, error } = api.user.register.useMutation({
     onSuccess: () => {
-      void router.push('/login');
+      router.push('/login');
     },
   });
 
   function onSubmit(values: RegisterInput) {
-    void mutateAsync({
+    mutateAsync({
       ...values,
       password: md5(values.password),
       password2: md5(values.password2),
@@ -31,10 +36,13 @@ const RegisterPage: NextPageWithLayout = () => {
   }
 
   return (
-    <form onSubmit={void handleSubmit(onSubmit)}>
-      {error && <p className='mt-2 text-sm text-red-600 dark:text-red-500'>{error.message}</p>}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className='flex flex-col gap-2'>
+        <ErrorAlert error={error} />
+        <ErrorAlert error={errors.name} />
+      </div>
 
-      <div className='grid gap-6 lg:grid-cols-2'>
+      <div className='grid gap-4 md:grid-cols-2 md:gap-6'>
         <div className='form-control'>
           <label className='label'>
             <span className='label-text'>邮箱</span>
@@ -95,8 +103,8 @@ const RegisterPage: NextPageWithLayout = () => {
         </div>
       </div>
 
-      <div className='mt-6 justify-center text-center lg:text-right'>
-        <button type='submit' className='btn-primary btn w-full lg:w-[180px]'>
+      <div className='mt-6 justify-center text-center md:mt-8 md:text-right'>
+        <button type='submit' className='btn-primary btn w-full md:w-[180px]'>
           注册
         </button>
       </div>
@@ -107,5 +115,5 @@ const RegisterPage: NextPageWithLayout = () => {
 export default RegisterPage;
 
 RegisterPage.getLayout = (page: ReactElement) => {
-  return <AuthLayout>{page}</AuthLayout>;
+  return <AuthLayout title='注册界面'>{page}</AuthLayout>;
 };
