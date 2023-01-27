@@ -1,3 +1,5 @@
-export default function LoginPage() {
-  return <div>LoginPage</div>;
-}
+import type { NextPageWithLayout } from './_app';
+
+const LoginPage: NextPageWithLayout = () => {};
+
+export default LoginPage;

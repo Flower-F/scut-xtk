@@ -3,11 +3,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { useLocalStorageState } from 'ahooks';
-import LogoImage from '../../public/images/logo.png';
+import { useRouter } from 'next/router';
+import LogoImage from '../../../public/images/logo.png';
 
 export function NavBar() {
+  const router = useRouter();
+
   return (
-    <header className='navbar bg-primary'>
+    <header className='navbar bg-primary text-primary-content'>
       <div className='navbar-start w-full'>
         <Link href='/' className='rounded-md px-2'>
           <Image src={LogoImage} className='h-16 w-auto sm:h-20' alt='Logo' priority />
@@ -31,7 +34,7 @@ export function NavBar() {
         </ul>
       </div>
 
-      <div className='navbar-end lg:hidden'>
+      <div className='navbar-end block lg:hidden'>
         <div className='dropdown-end dropdown'>
           <label tabIndex={0} className='btn-ghost btn'>
             <Bars3Icon className='h-6 w-6 text-gray-100' />
@@ -49,11 +52,13 @@ export function NavBar() {
             <li>
               <ThemeToggleButton />
             </li>
-            <li>
-              <label htmlFor='my-drawer' tabIndex={0} className='cursor-pointer'>
-                科目
-              </label>
-            </li>
+            {router.pathname === '/' && (
+              <li>
+                <label htmlFor='my-drawer' tabIndex={0} className='cursor-pointer'>
+                  科目
+                </label>
+              </li>
+            )}
           </ul>
         </div>
       </div>
