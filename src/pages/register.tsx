@@ -36,84 +36,94 @@ const RegisterPage: NextPageWithLayout = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div>
       <div className='flex flex-col gap-2'>
-        <ErrorAlert error={error} />
-        <ErrorAlert error={errors.name} />
+        {Object.keys(errors).length > 0 ? (
+          (Object.keys(errors) as Array<keyof typeof errors>).map((key) => <ErrorAlert error={errors[key]} />)
+        ) : (
+          <ErrorAlert error={error} />
+        )}
       </div>
 
-      <div className='grid gap-4 md:grid-cols-2 md:gap-6'>
-        <div className='form-control'>
-          <label className='label'>
-            <span className='label-text'>邮箱</span>
-          </label>
-          <label className='input-group'>
-            <span>
-              <EnvelopeIcon className='h-6 w-6' />
-            </span>
-            <input type='email' placeholder='请输入您的邮箱' className='input-bordered input' {...register('email')} />
-          </label>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='grid gap-4 md:grid-cols-2 md:gap-6'>
+          <div className='form-control'>
+            <label className='label'>
+              <span className='label-text'>邮箱</span>
+            </label>
+            <label className='input-group'>
+              <span>
+                <EnvelopeIcon className='h-6 w-6' />
+              </span>
+              <input
+                type='email'
+                placeholder='请输入您的邮箱'
+                className='input-bordered input'
+                {...register('email')}
+              />
+            </label>
+          </div>
+
+          <div className='form-control'>
+            <label className='label'>
+              <span className='label-text'>姓名</span>
+            </label>
+            <label className='input-group'>
+              <span>
+                <UserIcon className='h-6 w-6' />
+              </span>
+              <input type='text' placeholder='请输入您的姓名' className='input-bordered input' {...register('name')} />
+            </label>
+          </div>
+
+          <div className='form-control'>
+            <label className='label'>
+              <span className='label-text'>密码</span>
+            </label>
+            <label className='input-group'>
+              <span>
+                <LockClosedIcon className='h-6 w-6' />
+              </span>
+              <input
+                type='password'
+                placeholder='请输入您的密码'
+                className='input-bordered input'
+                {...register('password')}
+              />
+            </label>
+          </div>
+
+          <div className='form-control'>
+            <label className='label'>
+              <span className='label-text'>确认密码</span>
+            </label>
+            <label className='input-group'>
+              <span>
+                <LockClosedIcon className='h-6 w-6' />
+                <sub className='mt-0.5'>*</sub>
+              </span>
+              <input
+                type='password'
+                placeholder='请再次输入密码确认'
+                className='input-bordered input'
+                {...register('password2')}
+              />
+            </label>
+          </div>
         </div>
 
-        <div className='form-control'>
-          <label className='label'>
-            <span className='label-text'>姓名</span>
-          </label>
-          <label className='input-group'>
-            <span>
-              <UserIcon className='h-6 w-6' />
-            </span>
-            <input type='text' placeholder='请输入您的姓名' className='input-bordered input' {...register('name')} />
-          </label>
+        <div className='mt-6 justify-center text-center md:mt-8 md:text-right'>
+          <button type='submit' className='btn-primary btn w-full md:w-[180px]'>
+            注册
+          </button>
         </div>
-
-        <div className='form-control'>
-          <label className='label'>
-            <span className='label-text'>密码</span>
-          </label>
-          <label className='input-group'>
-            <span>
-              <LockClosedIcon className='h-6 w-6' />
-            </span>
-            <input
-              type='password'
-              placeholder='请输入您的密码'
-              className='input-bordered input'
-              {...register('password')}
-            />
-          </label>
-        </div>
-
-        <div className='form-control'>
-          <label className='label'>
-            <span className='label-text'>确认密码</span>
-          </label>
-          <label className='input-group'>
-            <span>
-              <LockClosedIcon className='h-6 w-6' />
-              <sub className='mt-0.5'>*</sub>
-            </span>
-            <input
-              type='password'
-              placeholder='请再次输入密码确认'
-              className='input-bordered input'
-              {...register('password2')}
-            />
-          </label>
-        </div>
-      </div>
-
-      <div className='mt-6 justify-center text-center md:mt-8 md:text-right'>
-        <button type='submit' className='btn-primary btn w-full md:w-[180px]'>
-          注册
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
 export default RegisterPage;
 
 RegisterPage.getLayout = (page: ReactElement) => {
-  return <AuthLayout title='注册界面'>{page}</AuthLayout>;
+  return <AuthLayout title='注册'>{page}</AuthLayout>;
 };

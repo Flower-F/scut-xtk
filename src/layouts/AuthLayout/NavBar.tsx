@@ -19,6 +19,9 @@ export function NavBar() {
             <Link href='/login'>登录</Link>
           </li>
           <li>
+            <Link href='/register'>注册</Link>
+          </li>
+          <li>
             <ThemeToggleButton />
           </li>
         </ul>
@@ -32,6 +35,9 @@ export function NavBar() {
           <ul className='dropdown-content menu rounded-box menu-compact mt-3 w-24 bg-base-200 p-2 shadow'>
             <li>
               <Link href='/login'>登录</Link>
+            </li>
+            <li>
+              <Link href='/register'>注册</Link>
             </li>
             <li>
               <ThemeToggleButton />

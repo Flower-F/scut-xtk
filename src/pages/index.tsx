@@ -1,9 +1,7 @@
-import Head from 'next/head';
 import type { ReactElement } from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { api } from '../utils/api';
 import type { NextPageWithLayout } from './_app';
 import { AdminLayout } from '../layouts/AdminLayout';
+// import { signIn, signOut, useSession } from 'next-auth/react';
 
 const HomePage: NextPageWithLayout = () => {
   return (

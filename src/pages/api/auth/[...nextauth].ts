@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { compare } from 'bcryptjs';
 import { prisma } from '../../../server/db';
-import { loginSchema } from '../../../schemas/user';
+import { loginInputSchema } from '../../../schemas/user';
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -36,7 +36,7 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials) {
-        const { email, password } = await loginSchema.parseAsync(credentials);
+        const { email, password } = await loginInputSchema.parseAsync(credentials);
 
         if (email === '' || password === '') {
           return null;

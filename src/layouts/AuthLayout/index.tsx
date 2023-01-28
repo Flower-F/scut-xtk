@@ -11,7 +11,7 @@ export function AuthLayout({ children, title }: { children: ReactNode; title?: s
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <NavBar />
-      <main className='mt-8 flex items-center justify-center'>{children}</main>
+      <main className='mt-8 flex flex-col items-center justify-center'>{children}</main>
     </>
   );
 }
