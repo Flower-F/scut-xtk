@@ -1,7 +1,7 @@
 import { useLocalStorageState } from 'ahooks';
 import { useEffect } from 'react';
 
-const THEMES = ['corporate', 'dark'];
+const THEMES = ['corporate', 'winter', 'dark', 'business'];
 
 export function ThemeToggleButton() {
   const [themeIndex, setThemeIndex] = useLocalStorageState('scut-xtk-theme', {

@@ -11,7 +11,7 @@ export const userRouter = createTRPCRouter({
     if (password !== password2) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'The passwords entered are inconsistent',
+        message: '两次输入的密码不一致',
       });
     }
 

@@ -6,13 +6,13 @@ export function ErrorAlert({ error }: { error?: { message?: string } | null | st
   }
 
   if (typeof error === 'string') {
-    return <ErrorWrapper message={error} />;
+    return <ErrorAlertWrapper message={error} />;
   }
 
-  return error.message ? <ErrorWrapper message={error.message} /> : null;
+  return error.message ? <ErrorAlertWrapper message={error.message} /> : null;
 }
 
-function ErrorWrapper({ message }: { message: string }) {
+function ErrorAlertWrapper({ message }: { message: string }) {
   return (
     <div className='alert alert-error items-start shadow-lg'>
       <div>
