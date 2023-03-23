@@ -1,0 +1,8 @@
+node_modules
+prisma
+public
+*.d.ts
+pnpm-lock.yaml
+package.json
+*.md
+*.css
