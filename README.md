@@ -1,28 +1,40 @@
-# Create T3 App
+# SCUT XTK
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+- Built with [T3 Stack](https://create.t3.gg/)
+- UI Design from [shadcn/ui](https://ui.shadcn.com/)
 
-## What's next? How do I make an app with this?
+# Basic Tech Stacks
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Next.js
+- TypeScript
+- tRPC
+- Prisma
+- Next Auth
+- Radix UI
+- TailwindCSS
+- MySQL
+- Netlify
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# Features
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+The relationship of major, knowledge point and questions: each major has a lot of knowledge point, and each knowledge point is related to a lot of questions.
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- User Module
+  - Register & Login & Logout
+  - Permission management(Special admin user and Normal user)
+  - Personal Center
+  - Question favorites
+- Major Module
+  - Basic CRUD
+- Knowledge Point Module
+  - Basic CRUD
+- Question Module
+  - Basic CRUD
+  - Filter questions based on some attributes like the difficulty, types and knowledge point
+- Paper Module
+  - One click to generate a paper base on the settings
+  - Collect the questions you want and combine them into a paper
+  - Paper download
+- Other requirements
+  - Responsive as possible
+  - Get high performance through SSR
