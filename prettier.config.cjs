@@ -1,4 +1,4 @@
-/** @type {import("prettier").Config} */
+/** @type {import('prettier').Config} */
 const config = {
   singleQuote: true,
   jsxSingleQuote: true,
