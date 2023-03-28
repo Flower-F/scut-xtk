@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import { usePathname } from 'next/navigation';
-import { collegeMapping } from '~/constants/college';
+
 import { DashboardLayout } from '~/layouts/DashboardLayout';
+import { collegeMapping } from '~/constants/college';
 
 export default function DashboardCollegeDetail() {
   const splitPathnames = usePathname()?.split('/');
@@ -10,9 +11,7 @@ export default function DashboardCollegeDetail() {
   return (
     <>
       <Head>
-        <title>
-          习题库 - {slug && slug in collegeMapping ? collegeMapping[slug as keyof typeof collegeMapping] : '未知学院'}
-        </title>
+        <title>{slug && slug in collegeMapping ? collegeMapping[slug as keyof typeof collegeMapping] : '习题库'}</title>
         <meta name='description' content='习题库内容的管理面板' />
         <link rel='icon' href='/favicon.ico' />
       </Head>

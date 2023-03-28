@@ -1,20 +1,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '~/utils/common';
-import { type Icons } from '~/components/Icons';
 
-interface NavItem {
-  title: string;
-  href?: string;
-  disabled?: boolean;
-  external?: boolean;
-  icon?: keyof typeof Icons;
-  label?: string;
-}
-interface NavItemWithChildren extends NavItem {
-  items: NavItemWithChildren[];
-}
-type SidebarNavItem = NavItemWithChildren;
+import { type SidebarNavItem } from '~/types/nav';
+import { cn } from '~/utils/common';
+
 interface SidebarNavProps {
   items: SidebarNavItem[];
 }
@@ -27,7 +16,7 @@ export function SidebarNav({ items }: SidebarNavProps) {
       {items.map((item, index) => (
         <div key={index} className={cn('pb-6')}>
           <h4 className='mb-1 rounded-md px-2 py-1 text-sm font-semibold'>{item.title}</h4>
-          {item?.items?.length && <SidebarNavItems items={item.items} pathname={pathname} />}
+          {item.items?.length && <SidebarNavItems items={item.items} pathname={pathname} />}
         </div>
       ))}
     </div>
@@ -40,7 +29,7 @@ interface SidebarNavItemsProps {
 }
 
 export function SidebarNavItems({ items, pathname }: SidebarNavItemsProps) {
-  return items?.length ? (
+  return items.length ? (
     <div className='grid grid-flow-row auto-rows-max text-sm'>
       {items.map((item, index) =>
         item.href ? (

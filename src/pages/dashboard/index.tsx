@@ -1,4 +1,5 @@
 import Head from 'next/head';
+
 import { DashboardLayout } from '~/layouts/DashboardLayout';
 
 export default function DashBoardPage() {
