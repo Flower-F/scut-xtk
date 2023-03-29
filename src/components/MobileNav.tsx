@@ -31,7 +31,7 @@ export function MobileNav({ items }: MobileNavProps) {
           <span className='font-bold'>Menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='start' sideOffset={24} alignOffset={4} className='w-[300px] overflow-scroll'>
+      <DropdownMenuContent align='end' sideOffset={24} alignOffset={4} className='w-[300px] overflow-scroll'>
         <DropdownMenuItem asChild>
           <Link href='/' className='flex items-center'>
             <Icons.Logo className='mr-2 h-4 w-4' /> shadcn/ui

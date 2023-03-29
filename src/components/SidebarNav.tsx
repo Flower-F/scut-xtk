@@ -25,7 +25,7 @@ export function SidebarNav({ items }: SidebarNavProps) {
 
 interface SidebarNavItemsProps {
   items: SidebarNavItem[];
-  pathname: string | null;
+  pathname?: string;
 }
 
 export function SidebarNavItems({ items, pathname }: SidebarNavItemsProps) {

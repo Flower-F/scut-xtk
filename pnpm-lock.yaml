@@ -38,6 +38,7 @@ specifiers:
   prisma: ^4.9.0
   react: 18.2.0
   react-dom: 18.2.0
+  simplebar-react: ^3.2.2
   superjson: 1.9.1
   tailwind-merge: ^1.10.0
   tailwindcss: ^3.2.0
@@ -67,6 +68,7 @@ dependencies:
   next-themes: 0.2.1_ld2jel3hspngo3u5lti2kgl2sq
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  simplebar-react: 3.2.2_react@18.2.0
   superjson: 1.9.1
   tailwind-merge: 1.10.0
   zod: 3.21.4
@@ -1676,6 +1678,10 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
+  /can-use-dom/0.1.0:
+    resolution: {integrity: sha512-ceOhN1DL7Y4O6M0j9ICgmTYziV89WMd96SvSl0REd8PMgrY0B/WBOPoed5S1KUmJqXgUXh8gzSe6E3ae27upsQ==}
+    dev: false
+
   /caniuse-lite/1.0.30001469:
     resolution: {integrity: sha512-Rcp7221ScNqQPP3W+lVOYDyjdR6dC+neEQCttoNr5bAyz54AboB4iwpnWgyi8P4YUsPybVzT4LgWiBbI3drL4g==}
 
@@ -2901,6 +2907,10 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
+
   /lodash.clone/4.5.0:
     resolution: {integrity: sha512-GhrVeweiTD6uTmmn5hV/lzgCQhccwReIVRLHp7LT4SopOjqEZ5BbX8b5WWEtAKasjmy8hR7ZPwsYlxRCku5odg==}
     dev: true
@@ -2912,6 +2922,10 @@ packages:
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
+
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: false
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -3665,6 +3679,23 @@ packages:
       get-intrinsic: 1.2.0
       object-inspect: 1.12.3
     dev: true
+
+  /simplebar-core/1.2.2:
+    resolution: {integrity: sha512-uVNCnLtZRHgzBd5Tg23hGA5LX2NBt15xPQ3UhPUbPRnSx3rEYuWLK3iEnkR8Yxkcp/Kf/Vu/PJTEaiaJ3T0gTw==}
+    dependencies:
+      can-use-dom: 0.1.0
+      lodash: 4.17.21
+      lodash-es: 4.17.21
+    dev: false
+
+  /simplebar-react/3.2.2_react@18.2.0:
+    resolution: {integrity: sha512-QkUA9ZOELCp9ITJxvxARDqT87+9DkY75Atu9Ov9IfPzAkfwOTohjAXnyw3WvhvSSCxdHfl5yZIGzfNU0ZeNkDA==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      simplebar-core: 1.2.2
+    dev: false
 
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}

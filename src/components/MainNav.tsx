@@ -17,7 +17,7 @@ import {
 import { cn } from '~/utils/common';
 
 interface MainNavProps {
-  items: MainNavItem[];
+  items?: MainNavItem[];
 }
 
 export function MainNav({ items }: MainNavProps) {
@@ -60,27 +60,20 @@ export function MainNav({ items }: MainNavProps) {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className='h-9'>Components</NavigationMenuTrigger>
+            <NavigationMenuTrigger className='h-9'>选择学院</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className='grid w-[600px] grid-cols-2 gap-3 p-4'>
-                {/* {allDocs
-                  .filter((doc) => doc.featured)
-                  .map((doc) => (d
-                    <ListItem key={doc._id} title={doc.title} href={doc.slug}>
-                      {doc.description}
-                    </ListItem>
-                  ))} */}
-                {items.map((item, index) => (
-                  <ListItem key={index} title={item.title} href={item.href || '/'} />
-                ))}
+                {items?.length
+                  ? items.map((item, index) => <ListItem key={index} title={item.title} href={item.href || '/'} />)
+                  : null}
               </ul>
               <div className='p-4 pt-0'>
                 <Separator className='mb-4' />
-                <Link href='/docs/primitives/accordion' passHref legacyBehavior>
+                <Link href='/dashboard/college' passHref legacyBehavior>
                   <NavigationMenuLink
                     className={cn(buttonVariants({ variant: 'outline' }), 'w-full dark:hover:bg-slate-700')}
                   >
-                    Browse components
+                    学院全览
                   </NavigationMenuLink>
                 </Link>
               </div>
