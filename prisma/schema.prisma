@@ -23,7 +23,7 @@ datasource db {
 // Necessary for Next auth
 model User {
   id       String  @id @default(cuid())
-  major    String
+  college  String
   name     String
   email    String  @unique
   password String

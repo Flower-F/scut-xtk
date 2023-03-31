@@ -5,13 +5,13 @@ import { type SidebarNavItem } from '~/types/nav';
 import { cn } from '~/utils/common';
 
 interface SidebarNavProps {
-  items: SidebarNavItem[];
+  items?: SidebarNavItem[];
 }
 
 export function SidebarNav({ items }: SidebarNavProps) {
   const pathname = usePathname();
 
-  return items.length ? (
+  return items?.length ? (
     <div className='w-full'>
       {items.map((item, index) => (
         <div key={index} className={cn('pb-6')}>
