@@ -1,23 +1,62 @@
 import Head from 'next/head';
-import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
 import { collegeMapping } from '~/constants/college';
-import { sidebarNavItems } from '..';
+import { api } from '~/utils/api';
+
+const sidebarNavItems = [
+  {
+    title: '网站介绍',
+    items: [
+      {
+        title: '网站背景',
+        href: '/dashboard',
+        items: [],
+      },
+      {
+        title: '使用说明',
+        href: '/dashboard/get-started',
+        items: [],
+      },
+    ],
+  },
+  {
+    title: '学院选择',
+    items: (Object.keys(collegeMapping) as Array<keyof typeof collegeMapping>).map((key) => {
+      return {
+        title: collegeMapping[key],
+        href: `/dashboard/college/${key}`,
+        items: [],
+      };
+    }),
+  },
+];
 
 export default function DashboardCollegeDetailPage() {
-  const splitPathnames = usePathname()?.split('/');
-  const slug = splitPathnames?.length > 0 ? splitPathnames[splitPathnames.length - 1] : '';
-  const college = slug && slug in collegeMapping ? collegeMapping[slug as keyof typeof collegeMapping] : undefined;
+  const router = useRouter();
+  const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+  const college = slug && slug in collegeMapping ? collegeMapping[slug as keyof typeof collegeMapping] : '选择学院';
+
+  const searchParams = useSearchParams();
+  const knowledge = searchParams.get('knowledge');
+
+  const getSidebarNavItems = api.college.getSidebarNavItems.useQuery(
+    { slug },
+    {
+      enabled: !!router.query.slug,
+    }
+  );
 
   return (
     <>
       <Head>
-        <title>{college ? college : '选择学院'}</title>
-        <meta name='description' content='习题库内容的管理面板' />
+        <title>{college}</title>
+        <meta name='description' content='习题库管理面板' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <SidebarLayout sidebarNavItems={sidebarNavItems}>
+      <SidebarLayout sidebarNavItems={getSidebarNavItems.data}>
         <div>{college}</div>
       </SidebarLayout>
     </>
