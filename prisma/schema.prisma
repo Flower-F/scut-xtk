@@ -27,21 +27,21 @@ enum Role {
 
 // Necessary for Next auth
 model User {
-  id       String  @id @default(cuid())
-  college  College @relation(fields: [collegeId], references: [id])
-  name     String
-  email    String  @unique
-  password String
-  verified Boolean @default(false)
-  image    String?
-  role     Role    @default(USER)
+  id        String  @id @default(cuid())
+  name      String
+  email     String  @unique
+  password  String
+  verified  Boolean @default(false)
+  image     String?
+  role      Role    @default(USER)
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id])
 
   exercises Exercise[]
   bookmarks Bookmark[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  collegeId String
 }
 
 model College {
@@ -56,11 +56,12 @@ model College {
 }
 
 model KnowledgePoint {
-  id        String     @id @default(cuid())
+  id        String  @id @default(cuid())
   name      String
-  exercises Exercise[]
-  college   College    @relation(fields: [collegeId], references: [id])
+  college   College @relation(fields: [collegeId], references: [id])
   collegeId String
+
+  exercises Exercise[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

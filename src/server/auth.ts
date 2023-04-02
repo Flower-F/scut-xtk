@@ -1,8 +1,8 @@
 import { type GetServerSidePropsContext } from 'next';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { type Role } from '@prisma/client';
 import { verify } from 'argon2';
 import { getServerSession, type DefaultSession, type NextAuthOptions } from 'next-auth';
-// import DiscordProvider from 'next-auth/providers/discord';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 
@@ -33,23 +33,23 @@ declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      college: string;
+      collegeId: string;
       name: string;
       image?: string | null;
       email: string;
-      // ...other properties
-      // role: UserRole;
+      role: Role;
+      verified: boolean;
     };
   }
 
   interface User {
     id: string;
     name: string;
-    college: string;
+    collegeId: string;
     image?: string | null;
     email: string;
-    // ...other properties
-    // role: UserRole;
+    role: Role;
+    verified: boolean;
   }
 }
 
@@ -57,10 +57,12 @@ declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
     id: string;
-    college: string;
+    collegeId: string;
     name: string;
     image?: string | null;
     email: string;
+    role: Role;
+    verified: boolean;
   }
 }
 
@@ -83,7 +85,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.image = user.image;
         token.name = user.name;
-        token.college = user.college;
+        token.collegeId = user.collegeId;
       }
       return token;
     },
@@ -123,7 +125,9 @@ export const authOptions: NextAuthOptions = {
             image: user.image,
             email: user.email,
             name: user.name,
-            college: user.college,
+            collegeId: user.collegeId,
+            verified: user.verified,
+            role: user.role,
           };
         } catch (e) {
           return null;

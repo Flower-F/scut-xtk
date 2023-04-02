@@ -8,6 +8,7 @@ export const collegeRouter = createTRPCRouter({
     const { slug } = input;
 
     // check whether the slug exist
+
     const result: NavItemWithChildren[] = [
       {
         title: '软件学院',
