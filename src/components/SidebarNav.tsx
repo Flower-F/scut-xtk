@@ -33,8 +33,6 @@ interface SidebarNavItemsProps {
 }
 
 export function SidebarNavItems({ items, pathname, tag }: SidebarNavItemsProps) {
-  console.log('items: ', items);
-
   return items.length ? (
     <div className='grid grid-flow-row auto-rows-max text-sm'>
       <Accordion type='single' collapsible>

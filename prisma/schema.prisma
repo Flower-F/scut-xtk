@@ -16,17 +16,97 @@ datasource db {
 
 // model Example {
 //   id        String   @id @default(cuid())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+// createdAt DateTime @default(now())
+// updatedAt DateTime @updatedAt
 // }
+
+enum Role {
+  USER
+  ADMIN
+}
 
 // Necessary for Next auth
 model User {
   id       String  @id @default(cuid())
-  college  String
+  college  College @relation(fields: [collegeId], references: [id])
   name     String
   email    String  @unique
   password String
   verified Boolean @default(false)
   image    String?
+  role     Role    @default(USER)
+
+  exercises Exercise[]
+  bookmarks Bookmark[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  collegeId String
+}
+
+model College {
+  id   String @id @default(cuid())
+  name String
+
+  knowledgePoints KnowledgePoint[]
+  users           User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KnowledgePoint {
+  id        String     @id @default(cuid())
+  name      String
+  exercises Exercise[]
+  college   College    @relation(fields: [collegeId], references: [id])
+  collegeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ExerciseType {
+  CHOICE_QUESTION // 选择题
+  COMPLETITION_QUESTION // 填空题
+  BIG_QUESTION // 大题
+}
+
+enum DifficultyType {
+  EASY // 简单
+  MEDIUM // 中等
+  HARD // 困难
+}
+
+model Exercise {
+  id         String         @id @default(cuid())
+  type       ExerciseType // 题目类型
+  difficulty DifficultyType // 题目难度
+  question   String         @db.Text // 题目
+  answer     String         @db.Text // 解析
+  point      Int            @default(0) // 分值
+  label      String? // 标签
+
+  knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id])
+  knowledgePointId String
+  user             User           @relation(fields: [userId], references: [id])
+  userId           String
+
+  bookmarks Bookmark[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Bookmark {
+  id       String   @id @default(cuid())
+  userId   String
+  postId   String
+  user     User     @relation(fields: [userId], references: [id])
+  exercise Exercise @relation(fields: [postId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, postId])
 }

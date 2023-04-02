@@ -18,7 +18,7 @@ export const collegeRouter = createTRPCRouter({
               {
                 title: 'Token',
                 href: '/dashboard/college/sse?major=12345',
-                label: 'Hard',
+                label: '重点',
                 items: [],
               },
               {
