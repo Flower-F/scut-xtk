@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
@@ -8,7 +9,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/
 
 const registerInputSchema = z.object({
   email: z.string().email('邮箱格式不正确'),
-  name: z.string().min(1, '姓名不能为空'),
+  name: z.string().nonempty('姓名不能为空'),
   collegeId: z.string().nonempty('学院信息未选择'),
   password: z.string().min(8, '密码长度最少为8位'),
   password2: z.string().min(8, '确认密码长度最少为8位'),
@@ -27,12 +28,19 @@ export const userRouter = createTRPCRouter({
 
     try {
       const passwordHash = await hash(password);
+
       await ctx.prisma.user.create({
         data: {
           email,
           name,
+          role: password === env.ADMIN_PASSWORD && email === env.ADMIN_EMAIL ? Role.ADMIN : Role.USER,
           password: passwordHash,
-          collegeId,
+          // collegeId,
+          // college: {
+          //   connect: {
+          //     id: collegeId,
+          //   },
+          // },
         },
       });
     } catch (e) {
@@ -44,6 +52,8 @@ export const userRouter = createTRPCRouter({
           });
         }
       }
+
+      console.log('e: ', e);
 
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',

@@ -11,7 +11,7 @@ export default function DashBoardPage() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <MainLayout>
-        <div>网站介绍</div>
+        <div>欢迎界面</div>
       </MainLayout>
     </>
   );

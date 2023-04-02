@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import md5 from 'md5';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,10 +13,10 @@ import { api } from '~/utils/api';
 
 const registerInputSchema = z.object({
   email: z.string().email('请输入正确的邮箱'),
-  name: z.string().min(1, '请输入您的姓名'),
+  name: z.string().nonempty('请输入您的姓名'),
   password: z.string().min(8, '密码长度最少为8位'),
   password2: z.string().min(8, '确认密码长度最少为8位'),
-  collegeId: z.string().min(1, '请输入您的学院'),
+  collegeId: z.string().nonempty('请输入您的学院'),
 });
 
 type RegisterInput = z.TypeOf<typeof registerInputSchema>;
@@ -46,20 +45,14 @@ export default function RegisterPage() {
   });
 
   async function onSubmit(input: RegisterInput) {
-    console.log('input: ', input);
-    await signup.mutateAsync({
-      ...input,
-      password: md5(input.password),
-      password2: md5(input.password2),
-    });
+    // console.log('input: ', input);
+    await signup.mutateAsync(input);
   }
 
   return (
     <MainLayout>
-      <div className='flex flex-col items-center justify-center py-8'>
-        <h2 className='scroll-m-20 border-b border-b-slate-200 pb-2 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
-          登录
-        </h2>
+      <div className='flex flex-col items-center justify-center gap-4 py-8'>
+        <h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>注册</h3>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className='flex min-w-[350px] max-w-sm flex-col items-center justify-center gap-4 rounded-lg border p-10'
@@ -71,7 +64,9 @@ export default function RegisterPage() {
               control={control}
               render={({ field }) => <Input type='email' id='email' placeholder='请输入您的邮箱' {...field} />}
             />
-            {errors.email ? <div>{errors.email.message}</div> : null}
+            {errors.email ? (
+              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.email.message}</div>
+            ) : null}
           </div>
 
           <div className='grid w-full items-center gap-1.5'>
@@ -81,7 +76,9 @@ export default function RegisterPage() {
               control={control}
               render={({ field }) => <Input type='text' id='name' placeholder='请输入您的姓名' {...field} />}
             />
-            {errors.name ? <div>{errors.name.message}</div> : null}
+            {errors.name ? (
+              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.name.message}</div>
+            ) : null}
           </div>
 
           <div className='grid w-full items-center gap-1.5'>
@@ -104,7 +101,9 @@ export default function RegisterPage() {
                 </Select>
               )}
             />
-            {errors.collegeId ? <div>{errors.collegeId.message}</div> : null}
+            {errors.collegeId ? (
+              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.collegeId.message}</div>
+            ) : null}
           </div>
 
           <div className='grid w-full items-center gap-1.5'>
@@ -114,7 +113,9 @@ export default function RegisterPage() {
               control={control}
               render={({ field }) => <Input type='password' id='password' placeholder='请输入您的密码' {...field} />}
             />
-            {errors.password ? <div>{errors.password.message}</div> : null}
+            {errors.password ? (
+              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.password.message}</div>
+            ) : null}
           </div>
 
           <div className='grid w-full items-center gap-1.5'>
@@ -126,7 +127,9 @@ export default function RegisterPage() {
                 <Input type='password' id='password2' placeholder='请再次输入您的密码' {...field} />
               )}
             />
-            {errors.password2 ? <div>{errors.password2.message}</div> : null}
+            {errors.password2 ? (
+              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.password2.message}</div>
+            ) : null}
           </div>
 
           <div className='flex w-full flex-col text-right'>
