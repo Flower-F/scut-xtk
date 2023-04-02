@@ -8,20 +8,10 @@ import { z } from 'zod';
 
 import { prisma } from '~/server/db';
 
-export const loginInputSchema = z.object({
-  email: z.string().email('请输入正确的邮箱'),
-  password: z.string(),
+const loginInputSchema = z.object({
+  email: z.string().email('邮箱格式不正确'),
+  password: z.string().min(8, '密码长度需要大于8位'),
 });
-
-export type LoginInput = z.TypeOf<typeof loginInputSchema>;
-
-export const registerInputSchema = z.object({
-  email: z.string().email('请输入正确的邮箱'),
-  password: z.string().min(8, '密码长度不得少于8位'),
-  password2: z.string().min(8, '密码长度不得少于8位'),
-});
-
-export type RegisterInput = z.TypeOf<typeof registerInputSchema>;
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
