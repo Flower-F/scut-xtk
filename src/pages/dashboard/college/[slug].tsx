@@ -53,7 +53,7 @@ export default function DashboardCollegeDetailPage() {
     <>
       <Head>
         <title>{college}</title>
-        <meta name='description' content='习题库管理面板' />
+        <meta name='description' content={`${college}习题库`} />
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <SidebarLayout sidebarNavItems={getSidebarNavItems.data}>

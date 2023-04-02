@@ -53,8 +53,6 @@ export const userRouter = createTRPCRouter({
         }
       }
 
-      console.log('e: ', e);
-
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: '服务器出现未知错误',

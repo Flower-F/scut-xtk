@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { type NavItemWithChildren } from '~/types/nav';
-import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
+import { adminProcedure, createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
 export const collegeRouter = createTRPCRouter({
   getSidebarNavItems: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
@@ -62,4 +62,6 @@ export const collegeRouter = createTRPCRouter({
     //   },
     // });
   }),
+
+  // createCollege: adminProcedure.input().mutation(())
 });

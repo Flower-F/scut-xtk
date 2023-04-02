@@ -23,7 +23,7 @@ declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      collegeId: string;
+      collegeId?: string | null;
       name: string;
       image?: string | null;
       email: string;
@@ -35,7 +35,7 @@ declare module 'next-auth' {
   interface User {
     id: string;
     name: string;
-    collegeId: string;
+    collegeId?: string | null;
     image?: string | null;
     email: string;
     role: Role;
@@ -47,7 +47,7 @@ declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
     id: string;
-    collegeId: string;
+    collegeId?: string | null;
     name: string;
     image?: string | null;
     email: string;
@@ -76,6 +76,7 @@ export const authOptions: NextAuthOptions = {
         token.image = user.image;
         token.name = user.name;
         token.collegeId = user.collegeId;
+        token.role = user.role;
       }
       return token;
     },

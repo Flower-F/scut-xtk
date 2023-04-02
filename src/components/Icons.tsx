@@ -1,4 +1,4 @@
-import { Laptop, Moon, SunMedium, Twitter, type Icon as LucideIcon, type LucideProps } from 'lucide-react';
+import { Laptop, Moon, PlusCircle, SunMedium, Twitter, type Icon as LucideIcon, type LucideProps } from 'lucide-react';
 
 export type Icon = LucideIcon;
 
@@ -23,4 +23,5 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  PlusCircle,
 };
