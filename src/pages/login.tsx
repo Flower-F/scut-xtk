@@ -2,8 +2,9 @@ import { type GetServerSideProps, type InferGetServerSidePropsType } from 'next'
 import Head from 'next/head';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getCsrfToken, signIn } from 'next-auth/react';
+import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -27,6 +28,13 @@ export default function LoginPage({ csrfToken }: InferGetServerSidePropsType<typ
   } = useForm<LoginInput>({
     resolver: zodResolver(loginInputSchema),
   });
+
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  if (sessionData) {
+    void router.push('/dashboard');
+  }
 
   async function onSubmit(input: LoginInput) {
     await signIn('credentials', {
