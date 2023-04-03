@@ -35,6 +35,7 @@ export const userRouter = createTRPCRouter({
           name,
           role: password === env.ADMIN_PASSWORD && email === env.ADMIN_EMAIL ? Role.ADMIN : Role.USER,
           password: passwordHash,
+          verified: password === env.ADMIN_PASSWORD && email === env.ADMIN_EMAIL ? true : false,
           // collegeId,
           // college: {
           //   connect: {

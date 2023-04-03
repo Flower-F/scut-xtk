@@ -77,6 +77,7 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.collegeId = user.collegeId;
         token.role = user.role;
+        token.verified = user.verified;
       }
       return token;
     },

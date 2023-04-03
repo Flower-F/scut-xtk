@@ -11,6 +11,8 @@
 - Prisma
 - Next Auth
 - Radix UI
+- React Hook Form
+- Zod
 - TailwindCSS
 - MySQL
 - Netlify
