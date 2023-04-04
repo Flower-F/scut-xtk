@@ -5,7 +5,7 @@ import { hash } from 'argon2';
 import { z } from 'zod';
 import { env } from '~/env.mjs';
 
-import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
+import { adminProcedure, createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
 const registerInputSchema = z.object({
   email: z.string().email('邮箱格式不正确'),
@@ -78,5 +78,29 @@ export const userRouter = createTRPCRouter({
     });
 
     return result;
+  }),
+
+  verifyUser: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    await ctx.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        verified: true,
+      },
+    });
+  }),
+
+  banUser: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    await ctx.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        verified: false,
+      },
+    });
   }),
 });
