@@ -27,11 +27,11 @@ export default function DashboardCollegePage() {
         </h2>
         <ul className='grid w-full grid-cols-2 gap-3 p-4 md:grid-cols-3 xl:grid-cols-4'>
           {getCollegeList.data?.length
-            ? getCollegeList.data.map((item, index) =>
+            ? getCollegeList.data.map((item) =>
                 sessionData?.user.role === 'ADMIN' ? (
-                  <UpdateCollegeDialog key={index} id={item.id} name={item.name} slug={item.slug} />
+                  <UpdateCollegeDialog key={item.id} id={item.id} name={item.name} slug={item.slug} />
                 ) : (
-                  <ListItem key={index} title={item.name} href={`/dashboard/college/${item.slug}`} />
+                  <ListItem key={item.id} title={item.name} href={`/dashboard/college/${item.slug}`} />
                 )
               )
             : null}

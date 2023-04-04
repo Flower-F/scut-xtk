@@ -40,14 +40,11 @@ export function MobileNav({ items }: MobileNavProps) {
         <DropdownMenuSeparator />
         <ScrollArea className='h-[400px]'>
           {items?.length
-            ? items.map(
-                (item, index) =>
-                  item.href && (
-                    <DropdownMenuItem key={index} asChild>
-                      <Link href={item.href}>{item.title}</Link>
-                    </DropdownMenuItem>
-                  )
-              )
+            ? items.map((item) => (
+                <DropdownMenuItem key={item.id} asChild>
+                  <Link href={`/dashboard/college/${item.slug || ''}`}>{item.name}</Link>
+                </DropdownMenuItem>
+              ))
             : null}
           {items?.length
             ? items.map((item, index) => (
@@ -57,12 +54,12 @@ export function MobileNav({ items }: MobileNavProps) {
                       hidden: index === 0,
                     })}
                   />
-                  <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
+                  <DropdownMenuLabel>{item.name}</DropdownMenuLabel>
                   <DropdownMenuSeparator className='-mx-2' />
                   {item.items.length &&
-                    item.items.map((item) => (
-                      <DropdownMenuItem key={item.title} asChild>
-                        {item.href ? <Link href={item.href}>{item.title}</Link> : item.title}
+                    item.items.map((item1) => (
+                      <DropdownMenuItem key={item1.name} asChild>
+                        <Link href={`/dashboard/college/${item.slug || ''}?majorId=${item1.id}`}>{item1.name}</Link>
                       </DropdownMenuItem>
                     ))}
                 </DropdownMenuGroup>

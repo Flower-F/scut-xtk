@@ -1,25 +1,18 @@
 import { type ReactNode } from 'react';
 
-import { type NavItem, type NavItemWithChildren } from '~/types/nav';
+import { type NavItemWithChildren } from '~/types/nav';
 import { SiteFooter } from '~/components/SiteFooter';
 import { SiteHeader } from '~/components/SiteHeader';
-import { collegeMapping } from '~/constants/college';
+import { api } from '~/utils/api';
 
 interface MainLayoutProps {
   children: ReactNode;
   mobileNavItems?: NavItemWithChildren[];
 }
 
-const partialMainNavItems: NavItem[] = (Object.keys(collegeMapping) as Array<keyof typeof collegeMapping>)
-  .map((key) => {
-    return {
-      title: collegeMapping[key],
-      href: `/dashboard/college/${key}`,
-    };
-  })
-  .slice(0, 6);
-
 export function MainLayout({ children, mobileNavItems }: MainLayoutProps) {
+  const partialMainNavItems = api.college.getCollegeList.useQuery().data;
+
   return (
     <div className='flex min-h-screen flex-col'>
       <SiteHeader mobileNavItems={mobileNavItems} mainNavItems={partialMainNavItems} />

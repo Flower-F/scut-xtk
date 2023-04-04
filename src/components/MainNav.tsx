@@ -1,6 +1,5 @@
 import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
 import Link from 'next/link';
-import { Separator } from '@radix-ui/react-dropdown-menu';
 
 import { type MainNavItem } from '~/types/nav';
 import { Icons } from '~/components/Icons';
@@ -14,6 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '~/components/ui/NavigationMenu';
+import { Separator } from '~/components/ui/Separator';
 import { cn } from '~/utils/common';
 
 interface MainNavProps {
@@ -64,7 +64,9 @@ export function MainNav({ items }: MainNavProps) {
             <NavigationMenuContent>
               <ul className='grid w-[600px] grid-cols-2 gap-3 p-4'>
                 {items?.length
-                  ? items.map((item, index) => <ListItem key={index} title={item.title} href={item.href || '/'} />)
+                  ? items.map((item) => (
+                      <ListItem key={item.id} title={item.name} href={`/dashboard/college/${item.slug || ''}`} />
+                    ))
                   : null}
               </ul>
               <div className='p-4 pt-0'>
@@ -107,7 +109,7 @@ const ListItem = forwardRef<ElementRef<typeof Link>, ComponentPropsWithoutRef<ty
             )}
           >
             <div className='text-sm font-medium leading-none'>{title}</div>
-            <p className='text-sm leading-snug text-slate-500 line-clamp-2 dark:text-slate-400'>{children}</p>
+            <p className='line-clamp-2 text-sm leading-snug text-slate-500 dark:text-slate-400'>{children}</p>
           </NavigationMenuLink>
         </Link>
       </li>

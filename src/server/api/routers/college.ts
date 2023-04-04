@@ -12,33 +12,39 @@ export const collegeRouter = createTRPCRouter({
 
     const result: NavItemWithChildren[] = [
       {
-        title: '软件学院',
+        id: '1',
+        name: '软件学院',
+        slug: 'sse',
         items: [
           {
-            title: '编译原理',
+            id: '1',
+            name: '编译原理',
             items: [
               {
-                title: 'Token',
-                href: '/dashboard/college/sse?major=12345',
+                id: '1',
+                name: 'Token',
                 label: '重点',
                 items: [],
               },
               {
-                title: 'NFA',
-                href: '/dashboard/college/sse?major=45678',
+                id: '2',
+                name: 'NFA',
                 items: [],
               },
             ],
           },
           {
-            title: '数据结构与算法',
+            id: '2',
+            name: '数据结构与算法',
             items: [
               {
-                title: 'DFS',
+                id: '1',
+                name: 'DFS',
                 items: [],
               },
               {
-                title: 'BFS',
+                id: '2',
+                name: 'BFS',
                 items: [],
               },
             ],

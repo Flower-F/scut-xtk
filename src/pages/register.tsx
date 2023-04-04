@@ -30,13 +30,6 @@ export default function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerInputSchema),
-    defaultValues: {
-      email: '',
-      name: '',
-      password: '',
-      password2: '',
-      collegeId: 'banana',
-    },
   });
 
   const signup = api.user.register.useMutation({
@@ -48,6 +41,8 @@ export default function RegisterPage() {
   async function onSubmit(input: RegisterInput) {
     await signup.mutateAsync(input);
   }
+
+  const collegeList = api.college.getCollegeList.useQuery().data;
 
   return (
     <>
@@ -68,6 +63,7 @@ export default function RegisterPage() {
               <Controller
                 name='email'
                 control={control}
+                defaultValue=''
                 render={({ field }) => <Input type='email' id='email' placeholder='请输入您的邮箱' {...field} />}
               />
               {errors.email ? (
@@ -80,6 +76,7 @@ export default function RegisterPage() {
               <Controller
                 name='name'
                 control={control}
+                defaultValue=''
                 render={({ field }) => <Input type='text' id='name' placeholder='请输入您的姓名' {...field} />}
               />
               {errors.name ? (
@@ -92,17 +89,18 @@ export default function RegisterPage() {
               <Controller
                 name='collegeId'
                 control={control}
+                defaultValue={collegeList?.[0]?.id || ''}
                 render={({ field: { name, value, onChange } }) => (
                   <Select onValueChange={onChange} value={value} name={name}>
                     <SelectTrigger id='college'>
                       <SelectValue placeholder='选择您的学院' />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='apple'>软件学院</SelectItem>
-                      <SelectItem value='banana'>计算机学院</SelectItem>
-                      <SelectItem value='blueberry'>数学学院</SelectItem>
-                      <SelectItem value='grapes'>法学院</SelectItem>
-                      <SelectItem value='pineapple'>机械与汽车工程学院</SelectItem>
+                      {collegeList?.map((item) => (
+                        <SelectItem value={item.id} key={item.id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -117,6 +115,7 @@ export default function RegisterPage() {
               <Controller
                 name='password'
                 control={control}
+                defaultValue=''
                 render={({ field }) => <Input type='password' id='password' placeholder='请输入您的密码' {...field} />}
               />
               {errors.password ? (
@@ -129,6 +128,7 @@ export default function RegisterPage() {
               <Controller
                 name='password2'
                 control={control}
+                defaultValue=''
                 render={({ field }) => (
                   <Input type='password' id='password2' placeholder='请再次输入您的密码' {...field} />
                 )}
