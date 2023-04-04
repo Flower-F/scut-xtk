@@ -42,7 +42,7 @@ export function MobileNav({ items }: MobileNavProps) {
           {items?.length
             ? items.map((item) => (
                 <DropdownMenuItem key={item.id} asChild>
-                  <Link href={`/dashboard/college/${item.slug || ''}`}>{item.name}</Link>
+                  <Link href={`/college/${item.slug || ''}`}>{item.name}</Link>
                 </DropdownMenuItem>
               ))
             : null}
@@ -59,7 +59,7 @@ export function MobileNav({ items }: MobileNavProps) {
                   {item.items.length &&
                     item.items.map((item1) => (
                       <DropdownMenuItem key={item1.name} asChild>
-                        <Link href={`/dashboard/college/${item.slug || ''}?majorId=${item1.id}`}>{item1.name}</Link>
+                        <Link href={`/college/${item.slug || ''}?knowledgePointId=${item1.id}`}>{item1.name}</Link>
                       </DropdownMenuItem>
                     ))}
                 </DropdownMenuGroup>

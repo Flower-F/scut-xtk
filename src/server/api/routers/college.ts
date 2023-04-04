@@ -5,7 +5,7 @@ import { type NavItemWithChildren } from '~/types/nav';
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
 
 export const collegeRouter = createTRPCRouter({
-  getSidebarNavItems: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
+  getSidebarNavItems: publicProcedure.input(z.object({ slug: z.string().nullish() })).query(async ({ ctx, input }) => {
     const { slug } = input;
 
     // check whether the slug exist

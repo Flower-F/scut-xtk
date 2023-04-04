@@ -33,13 +33,13 @@ export default function LoginPage({ csrfToken }: InferGetServerSidePropsType<typ
   const router = useRouter();
 
   if (sessionData) {
-    void router.push('/dashboard');
+    void router.push('/');
   }
 
   async function onSubmit(input: LoginInput) {
     await signIn('credentials', {
       ...input,
-      callbackUrl: '/dashboard',
+      callbackUrl: '/',
     });
   }
 

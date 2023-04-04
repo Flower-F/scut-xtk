@@ -9,7 +9,7 @@ import { UpdateCollegeDialog } from '~/components/UpdateCollegeDialog';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/common';
 
-export default function DashboardCollegePage() {
+export default function CollegePage() {
   const { data: sessionData } = useSession();
 
   const getCollegeList = api.college.getCollegeList.useQuery();
@@ -31,7 +31,7 @@ export default function DashboardCollegePage() {
                 sessionData?.user.role === 'ADMIN' ? (
                   <UpdateCollegeDialog key={item.id} id={item.id} name={item.name} slug={item.slug} />
                 ) : (
-                  <ListItem key={item.id} title={item.name} href={`/dashboard/college/${item.slug}`} />
+                  <ListItem key={item.id} title={item.name} href={`/college/${item.slug}`} />
                 )
               )
             : null}

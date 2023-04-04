@@ -65,13 +65,13 @@ export function MainNav({ items }: MainNavProps) {
               <ul className='grid w-[600px] grid-cols-2 gap-3 p-4'>
                 {items?.length
                   ? items.map((item) => (
-                      <ListItem key={item.id} title={item.name} href={`/dashboard/college/${item.slug || ''}`} />
+                      <ListItem key={item.id} title={item.name} href={`/college/${item.slug || ''}`} />
                     ))
                   : null}
               </ul>
               <div className='p-4 pt-0'>
                 <Separator className='mb-4' />
-                <Link href='/dashboard/college' passHref legacyBehavior>
+                <Link href='/college' passHref legacyBehavior>
                   <NavigationMenuLink
                     className={cn(buttonVariants({ variant: 'outline' }), 'w-full dark:hover:bg-slate-700')}
                   >

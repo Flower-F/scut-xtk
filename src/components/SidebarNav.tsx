@@ -11,7 +11,7 @@ interface SidebarNavProps {
 
 export function SidebarNav({ items }: SidebarNavProps) {
   const searchParams = useSearchParams();
-  const majorId = searchParams.get('majorId');
+  const knowledgePointId = searchParams.get('knowledgePointId');
 
   return items?.length ? (
     <div className='w-full'>
@@ -19,7 +19,11 @@ export function SidebarNav({ items }: SidebarNavProps) {
         <div key={index} className={cn('pb-6')}>
           <h4 className='mb-1 rounded-md px-2 py-1 text-sm font-semibold'>{item.name}</h4>
           {item.items?.length && (
-            <SidebarNavItems items={item.items} collegeSlug={item.slug || ''} majorId={majorId || ''} />
+            <SidebarNavItems
+              items={item.items}
+              collegeSlug={item.slug || ''}
+              knowledgePointId={knowledgePointId || ''}
+            />
           )}
         </div>
       ))}
@@ -29,11 +33,11 @@ export function SidebarNav({ items }: SidebarNavProps) {
 
 interface SidebarNavItemsProps {
   items: SidebarNavItem[];
-  majorId: string;
+  knowledgePointId: string;
   collegeSlug: string;
 }
 
-export function SidebarNavItems({ items, majorId, collegeSlug }: SidebarNavItemsProps) {
+export function SidebarNavItems({ items, knowledgePointId, collegeSlug }: SidebarNavItemsProps) {
   return items.length ? (
     <div className='grid grid-flow-row auto-rows-max text-sm'>
       <Accordion type='single' collapsible>
@@ -43,12 +47,12 @@ export function SidebarNavItems({ items, majorId, collegeSlug }: SidebarNavItems
             {item.items.map((item) => (
               <AccordionContent key={item.id}>
                 <Link
-                  href={`/dashboard/college/${collegeSlug}?majorId=${item.id}`}
+                  href={`/college/${collegeSlug}?knowledgePointId=${item.id}`}
                   className={cn(
                     'group flex w-full items-center rounded-md px-2 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800',
                     item.disabled && 'cursor-not-allowed opacity-60',
                     {
-                      'bg-slate-100 dark:bg-slate-800': item.id === majorId,
+                      'bg-slate-100 dark:bg-slate-800': item.id === knowledgePointId,
                     }
                   )}
                   target={item.external ? '_blank' : ''}
