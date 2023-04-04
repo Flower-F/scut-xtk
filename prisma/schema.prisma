@@ -49,18 +49,28 @@ model College {
   name String
   slug String @unique
 
-  knowledgePoints KnowledgePoint[]
-  users           User[]
+  users   User[]
+  courses Course[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model KnowledgePoint {
+model Course {
   id        String  @id @default(cuid())
   name      String
   college   College @relation(fields: [collegeId], references: [id])
   collegeId String
+
+  knowledgePoints KnowledgePoint[]
+}
+
+model KnowledgePoint {
+  id       String  @id @default(cuid())
+  name     String
+  course   Course  @relation(fields: [courseId], references: [id])
+  courseId String
+  label    String? // 标签
 
   exercises Exercise[]
 
@@ -86,8 +96,6 @@ model Exercise {
   difficulty DifficultyType // 题目难度
   question   String         @db.Text // 题目
   answer     String         @db.Text // 解析
-  point      Int            @default(0) // 分值
-  label      String? // 标签
 
   knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id])
   knowledgePointId String
@@ -101,14 +109,15 @@ model Exercise {
 }
 
 model Bookmark {
-  id       String   @id @default(cuid())
-  userId   String
-  postId   String
+  id         String @id @default(cuid())
+  userId     String
+  exerciseId String
+
   user     User     @relation(fields: [userId], references: [id])
-  exercise Exercise @relation(fields: [postId], references: [id])
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, postId])
+  @@unique([userId, exerciseId])
 }

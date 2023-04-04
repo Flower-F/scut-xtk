@@ -1,5 +1,5 @@
 import { collegeRouter } from '~/server/api/routers/college';
-// import { exampleRouter } from '~/server/api/routers/example';
+import { courseRouter } from '~/server/api/routers/course';
 import { userRouter } from '~/server/api/routers/user';
 import { createTRPCRouter } from '~/server/api/trpc';
 
@@ -9,9 +9,9 @@ import { createTRPCRouter } from '~/server/api/trpc';
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  // example: exampleRouter,
   college: collegeRouter,
   user: userRouter,
+  course: courseRouter,
 });
 
 // export type definition of API

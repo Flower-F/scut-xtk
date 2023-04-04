@@ -28,6 +28,8 @@ The relationship of major, knowledge point and questions: each major has a lot o
   - Question favorites
 - Major Module
   - Basic CRUD
+- Course Module
+  - Basic CRUD
 - Knowledge Point Module
   - Basic CRUD
 - Question Module

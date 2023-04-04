@@ -2,11 +2,11 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { type NavItemWithChildren } from '~/types/nav';
-import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
+import { adminProcedure, createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
 export const collegeRouter = createTRPCRouter({
   getSidebarNavItems: publicProcedure.input(z.object({ slug: z.string().nullish() })).query(async ({ ctx, input }) => {
-    const { slug } = input;
+    // const { slug } = input;
 
     // check whether the slug exist
 
@@ -155,4 +155,26 @@ export const collegeRouter = createTRPCRouter({
         });
       }
     }),
+
+  getCollegeName: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
+    const { slug } = input;
+
+    try {
+      const result = await ctx.prisma.college.findFirst({
+        where: {
+          slug,
+        },
+        select: {
+          name: true,
+        },
+      });
+
+      return result;
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: '服务器出现未知错误',
+      });
+    }
+  }),
 });

@@ -36,7 +36,6 @@ export const userRouter = createTRPCRouter({
           role: password === env.ADMIN_PASSWORD && email === env.ADMIN_EMAIL ? Role.ADMIN : Role.USER,
           password: passwordHash,
           verified: password === env.ADMIN_PASSWORD && email === env.ADMIN_EMAIL ? true : false,
-          // collegeId,
           college: {
             connect: {
               id: collegeId,
@@ -82,25 +81,41 @@ export const userRouter = createTRPCRouter({
 
   verifyUser: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const { id } = input;
-    await ctx.prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        verified: true,
-      },
-    });
+
+    try {
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          verified: true,
+        },
+      });
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: '服务器出现未知错误',
+      });
+    }
   }),
 
   banUser: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const { id } = input;
-    await ctx.prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        verified: false,
-      },
-    });
+
+    try {
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          verified: false,
+        },
+      });
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: '服务器出现未知错误',
+      });
+    }
   }),
 });

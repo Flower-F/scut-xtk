@@ -19,7 +19,12 @@ const createCollegeInputSchema = z.object({
 type CreateCollegeInput = z.TypeOf<typeof createCollegeInputSchema>;
 
 export function CreateCollegeDialog() {
-  const createCollegeForm = useForm<CreateCollegeInput>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<CreateCollegeInput>({
     resolver: zodResolver(createCollegeInputSchema),
   });
   const [createCollegeError, setCreateCollegeError] = useState('');
@@ -30,7 +35,7 @@ export function CreateCollegeDialog() {
     onSuccess: async () => {
       toast.success('学院创建成功');
       await collegeContext.invalidate();
-      createCollegeForm.reset();
+      reset();
       setOpenCreateDialog(false);
     },
     onError: (err) => {
@@ -50,7 +55,7 @@ export function CreateCollegeDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={createCollegeForm.handleSubmit(onSubmitCreateCollege)}>
+        <form onSubmit={handleSubmit(onSubmitCreateCollege)}>
           <DialogHeader>
             <DialogTitle>新增学院信息</DialogTitle>
           </DialogHeader>
@@ -59,28 +64,24 @@ export function CreateCollegeDialog() {
               <Label htmlFor='name'>学院名称</Label>
               <Controller
                 name='name'
-                control={createCollegeForm.control}
+                control={control}
                 defaultValue=''
                 render={({ field }) => <Input type='text' id='name' placeholder='请输入学院名称' {...field} />}
               />
-              {createCollegeForm.formState.errors.name ? (
-                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>
-                  {createCollegeForm.formState.errors.name.message}
-                </div>
+              {errors.name ? (
+                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.name.message}</div>
               ) : null}
             </div>
             <div className='grid w-full items-center gap-1.5'>
               <Label htmlFor='slug'>学院标识</Label>
               <Controller
                 name='slug'
-                control={createCollegeForm.control}
+                control={control}
                 defaultValue=''
                 render={({ field }) => <Input type='text' id='slug' placeholder='请输入学院标识' {...field} />}
               />
-              {createCollegeForm.formState.errors.slug ? (
-                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>
-                  {createCollegeForm.formState.errors.slug.message}
-                </div>
+              {errors.slug ? (
+                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.slug.message}</div>
               ) : null}
             </div>
           </div>
