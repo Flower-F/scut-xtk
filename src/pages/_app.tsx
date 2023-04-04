@@ -6,14 +6,17 @@ import { Toaster } from 'react-hot-toast';
 
 import { api } from '~/utils/api';
 import '~/styles/globals.css';
+import { TooltipProvider } from '~/components/ui/Tooltip';
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-      <Toaster />
-      <SessionProvider session={session}>
-        <Component {...pageProps} />
-      </SessionProvider>
+      <TooltipProvider>
+        <Toaster />
+        <SessionProvider session={session}>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </TooltipProvider>
     </ThemeProvider>
   );
 };

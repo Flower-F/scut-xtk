@@ -5,7 +5,7 @@ import { hash } from 'argon2';
 import { z } from 'zod';
 import { env } from '~/env.mjs';
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
+import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
 
 const registerInputSchema = z.object({
   email: z.string().email('邮箱格式不正确'),
@@ -59,5 +59,24 @@ export const userRouter = createTRPCRouter({
         message: '服务器出现未知错误',
       });
     }
+  }),
+
+  getUserList: adminProcedure.query(async ({ ctx }) => {
+    const result = await ctx.prisma.user.findMany({
+      select: {
+        id: true,
+        verified: true,
+        role: true,
+        name: true,
+        email: true,
+        college: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return result;
   }),
 });

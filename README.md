@@ -32,11 +32,8 @@ The relationship of major, knowledge point and questions: each major has a lot o
   - Basic CRUD
 - Question Module
   - Basic CRUD
-  - Filter questions based on some attributes like the difficulty, types and knowledge point
+  - Filter questions based on some attributes like the difficulty, type and knowledge point
 - Paper Module
-  - One click to generate a paper base on the settings
+  - One click to generate a paper based on the settings
   - Collect the questions you want and combine them into a paper
   - Paper download
-- Other requirements
-  - Responsive as possible
-  - Get high performance through SSR

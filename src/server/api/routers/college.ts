@@ -70,7 +70,7 @@ export const collegeRouter = createTRPCRouter({
     // });
   }),
 
-  getCollegeList: protectedProcedure.query(async ({ ctx }) => {
+  getCollegeList: publicProcedure.query(async ({ ctx }) => {
     try {
       const result = await ctx.prisma.college.findMany({
         select: {
