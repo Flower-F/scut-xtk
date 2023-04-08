@@ -32,7 +32,7 @@ import { api } from '~/utils/api';
 // ];
 
 export default function GetStartedPage() {
-  const sidebarNavItems = api.college.getSidebarNavItems.useQuery({}).data;
+  const sidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery({}).data;
 
   return (
     <>

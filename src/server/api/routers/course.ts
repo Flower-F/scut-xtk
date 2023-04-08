@@ -1,20 +1,20 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export const courseRouter = createTRPCRouter({
-  getCourseList: protectedProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
+  getCourseList: protectedProcedure.input(z.object({ collegeSlug: z.string() })).query(async ({ ctx, input }) => {
     try {
-      const { slug } = input;
+      const { collegeSlug } = input;
 
-      if (!slug) {
+      if (!collegeSlug) {
         return [];
       }
 
       const college = await ctx.prisma.college.findFirst({
         where: {
-          slug,
+          slug: collegeSlug,
         },
       });
 
@@ -44,15 +44,15 @@ export const courseRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().nonempty('课程姓名不得为空'),
-        slug: z.string().nonempty('学院标识不得为空'),
+        collegeSlug: z.string().nonempty('学院标识不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, slug } = input;
+      const { name, collegeSlug } = input;
 
       const college = await ctx.prisma.college.findFirst({
         where: {
-          slug,
+          slug: collegeSlug,
         },
       });
 

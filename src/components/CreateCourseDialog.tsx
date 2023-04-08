@@ -18,10 +18,10 @@ const createCourseInputSchema = z.object({
 type CreateCourseInput = z.TypeOf<typeof createCourseInputSchema>;
 
 interface CreateCourseDialogProps {
-  slug: string;
+  collegeSlug: string;
 }
 
-export function CreateCourseDialog({ slug }: CreateCourseDialogProps) {
+export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
   const {
     control,
     handleSubmit,
@@ -46,10 +46,13 @@ export function CreateCourseDialog({ slug }: CreateCourseDialogProps) {
     },
   });
 
-  async function onSubmitCreateCourse(input: Omit<CreateCourseInput, 'slug'>, { slug }: { slug: string }) {
+  async function onSubmitCreateCourse(
+    input: Omit<CreateCourseInput, 'slug'>,
+    { collegeSlug }: { collegeSlug: string }
+  ) {
     await createCourse.mutateAsync({
       ...input,
-      slug,
+      collegeSlug,
     });
   }
 
@@ -61,7 +64,7 @@ export function CreateCourseDialog({ slug }: CreateCourseDialogProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={handleSubmit((data) => onSubmitCreateCourse(data, { slug }))}>
+        <form onSubmit={handleSubmit((data) => onSubmitCreateCourse(data, { collegeSlug }))}>
           <DialogHeader>
             <DialogTitle>新增课程信息</DialogTitle>
           </DialogHeader>

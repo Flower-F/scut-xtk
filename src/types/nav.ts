@@ -9,7 +9,7 @@ export interface NavItem {
   /** whether the link is an external link */
   external?: boolean;
   icon?: keyof typeof Icons;
-  label?: string;
+  label?: string | null;
 }
 
 export interface NavItemWithChildren extends NavItem {

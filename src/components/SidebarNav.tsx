@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { type SidebarNavItem } from '~/types/nav';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/Accordion';
 import { cn } from '~/utils/common';
+import { Button } from './ui/Button';
 
 interface SidebarNavProps {
   items?: SidebarNavItem[];
@@ -15,9 +16,13 @@ export function SidebarNav({ items }: SidebarNavProps) {
 
   return items?.length ? (
     <div className='w-full'>
-      {items.map((item, index) => (
-        <div key={index} className={cn('pb-6')}>
-          <h4 className='mb-1 rounded-md px-2 py-1 text-sm font-semibold'>{item.name}</h4>
+      {items.map((item) => (
+        <div key={item.id} className='pb-6'>
+          <h4 className='scroll-m-20 text-center text-xl font-semibold tracking-tight hover:underline'>
+            <Link href={`/college/${item.slug || ''}`} className='inline-block w-full'>
+              {item.name}
+            </Link>
+          </h4>
           {item.items?.length && (
             <SidebarNavItems
               items={item.items}
@@ -67,6 +72,11 @@ export function SidebarNavItems({ items, knowledgePointId, collegeSlug }: Sideba
                 </Link>
               </AccordionContent>
             ))}
+            <AccordionContent>
+              <Button className='w-full' variant='subtle'>
+                添加知识点
+              </Button>
+            </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>

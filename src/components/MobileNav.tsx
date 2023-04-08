@@ -48,7 +48,7 @@ export function MobileNav({ items }: MobileNavProps) {
             : null}
           {items?.length
             ? items.map((item, index) => (
-                <DropdownMenuGroup key={index}>
+                <DropdownMenuGroup key={item.id}>
                   <DropdownMenuSeparator
                     className={cn({
                       hidden: index === 0,

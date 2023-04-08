@@ -16,10 +16,10 @@ export default function CollegeDetailPage() {
   const searchParams = useSearchParams();
   const knowledgePointId = searchParams.get('knowledgePointId');
 
-  const courseList = api.course.getCourseList.useQuery({ slug }).data;
+  const courseList = api.course.getCourseList.useQuery({ collegeSlug: slug }).data;
 
-  const sidebarNavItems = api.college.getSidebarNavItems.useQuery(
-    { slug },
+  const sidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
+    { collegeSlug: slug },
     {
       enabled: !!router.query.slug,
     }
@@ -34,14 +34,14 @@ export default function CollegeDetailPage() {
       </Head>
       <SidebarLayout sidebarNavItems={sidebarNavItems}>
         <div>
-          <h2 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
+          <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
             {college}
-          </h2>
+          </h3>
           <ul className='grid w-full grid-cols-2 gap-3 p-4'>
             {courseList?.length
               ? courseList.map((item) => <UpdateCourseDialog key={item.id} id={item.id} name={item.name} />)
               : null}
-            <CreateCourseDialog slug={slug} />
+            <CreateCourseDialog collegeSlug={slug} />
           </ul>
         </div>
       </SidebarLayout>

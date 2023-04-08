@@ -22,9 +22,9 @@ export default function CollegePage() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <MainLayout>
-        <h2 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
+        <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
           学院全览
-        </h2>
+        </h3>
         <ul className='grid w-full grid-cols-2 gap-3 p-4 md:grid-cols-3 xl:grid-cols-4'>
           {getCollegeList.data?.length
             ? getCollegeList.data.map((item) =>
