@@ -25,6 +25,8 @@ export default function CollegeDetailPage() {
     }
   ).data;
 
+  console.log('sidebarNavItems: ', sidebarNavItems);
+
   return (
     <>
       <Head>
