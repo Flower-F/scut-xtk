@@ -18,7 +18,7 @@ const updateCollegeInputSchema = z.object({
 type UpdateCollegeInput = z.TypeOf<typeof updateCollegeInputSchema>;
 
 export function UpdateCollegeDialog({ name, id, slug }: { id: string; name: string; slug: string }) {
-  const [updateCollegeError, setUpdateCollegeError] = useState('');
+  const [error, setError] = useState('');
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const {
     control,
@@ -38,7 +38,7 @@ export function UpdateCollegeDialog({ name, id, slug }: { id: string; name: stri
       setOpenUpdateDialog(false);
     },
     onError: (err) => {
-      setUpdateCollegeError(err.message);
+      setError(err.message);
     },
   });
 
@@ -87,9 +87,7 @@ export function UpdateCollegeDialog({ name, id, slug }: { id: string; name: stri
               </div>
             </div>
 
-            {updateCollegeError ? (
-              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{updateCollegeError}</div>
-            ) : null}
+            {error ? <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{error}</div> : null}
             <DialogFooter>
               <Button type='submit'>提交</Button>
             </DialogFooter>

@@ -4,37 +4,40 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
-import { Icons } from '~/components/Icons';
 import { Button } from '~/components/ui/Button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/Dialog';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { api } from '~/utils/api';
 
-const createCollegeInputSchema = z.object({
-  name: z.string().nonempty('学院姓名不得为空'),
-  slug: z.string().nonempty('学院标识不得为空'),
+const createKnowledgePointInputSchema = z.object({
+  name: z.string().nonempty('知识点姓名不得为空'),
+  label: z.string().optional(),
 });
 
-type CreateCollegeInput = z.TypeOf<typeof createCollegeInputSchema>;
+type CreateKnowledgePointInput = z.TypeOf<typeof createKnowledgePointInputSchema>;
 
-export function CreateCollegeDialog() {
+interface CreateKnowledgePointDialogProps {
+  courseId: string;
+}
+
+export function CreateKnowledgePointDialog({ courseId }: CreateKnowledgePointDialogProps) {
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateCollegeInput>({
-    resolver: zodResolver(createCollegeInputSchema),
+  } = useForm<CreateKnowledgePointInput>({
+    resolver: zodResolver(createKnowledgePointInputSchema),
   });
   const [error, setError] = useState('');
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
-  const collegeContext = api.useContext().college;
-  const createCollege = api.college.createCollege.useMutation({
+  const knowledgePointContext = api.useContext().knowledgePoint;
+  const createKnowledgePoint = api.knowledgePoint.createKnowledgePoint.useMutation({
     onSuccess: async () => {
-      toast.success('学院创建成功');
-      await collegeContext.invalidate();
+      toast.success('知识点创建成功');
+      await knowledgePointContext.invalidate();
       reset();
       setOpenCreateDialog(false);
     },
@@ -43,45 +46,52 @@ export function CreateCollegeDialog() {
     },
   });
 
-  async function onSubmitCreateCollege(input: CreateCollegeInput) {
-    await createCollege.mutateAsync(input);
+  async function onSubmitCreateKnowledgePoint(
+    input: Omit<CreateKnowledgePointInput, 'courseId'>,
+    { courseId }: { courseId: string }
+  ) {
+    console.log('test');
+    await createKnowledgePoint.mutateAsync({
+      ...input,
+      courseId,
+    });
   }
 
   return (
     <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
       <DialogTrigger asChild onClick={() => setOpenCreateDialog(true)}>
-        <Button className='gap-2'>
-          <Icons.PlusCircle /> 添加学院
+        <Button className='w-full' variant='subtle'>
+          添加知识点
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={handleSubmit(onSubmitCreateCollege)}>
+        <form onSubmit={handleSubmit((data) => onSubmitCreateKnowledgePoint(data, { courseId }))}>
           <DialogHeader>
-            <DialogTitle>新增学院信息</DialogTitle>
+            <DialogTitle>新增知识点</DialogTitle>
           </DialogHeader>
           <div className='grid gap-4 py-4'>
             <div className='grid w-full items-center gap-1.5'>
-              <Label htmlFor='name'>学院名称</Label>
+              <Label htmlFor='name'>知识点名称</Label>
               <Controller
                 name='name'
                 control={control}
                 defaultValue=''
-                render={({ field }) => <Input type='text' id='name' placeholder='请输入学院名称' {...field} />}
+                render={({ field }) => <Input type='text' id='name' placeholder='请输入知识点名称' {...field} />}
               />
               {errors.name ? (
                 <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.name.message}</div>
               ) : null}
             </div>
             <div className='grid w-full items-center gap-1.5'>
-              <Label htmlFor='slug'>学院标识</Label>
+              <Label htmlFor='label'>知识点标签（选填）</Label>
               <Controller
-                name='slug'
+                name='label'
                 control={control}
                 defaultValue=''
-                render={({ field }) => <Input type='text' id='slug' placeholder='请输入学院标识' {...field} />}
+                render={({ field }) => <Input type='text' id='label' placeholder='请输入知识点标签' {...field} />}
               />
-              {errors.slug ? (
-                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.slug.message}</div>
+              {errors.label ? (
+                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.label.message}</div>
               ) : null}
             </div>
           </div>

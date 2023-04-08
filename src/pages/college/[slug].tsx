@@ -10,22 +10,19 @@ import { api } from '~/utils/api';
 export default function CollegeDetailPage() {
   const router = useRouter();
   const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
-  // const college = slug && slug in collegeMapping ? collegeMapping[slug as keyof typeof collegeMapping] : '选择学院';
-  const college = api.college.getCollegeName.useQuery({ slug }).data?.name || '未知学院';
+  const college = api.college.getCollegeName.useQuery({ slug }).data?.name || '华南理工习题库';
 
   const searchParams = useSearchParams();
   const knowledgePointId = searchParams.get('knowledgePointId');
 
   const courseList = api.course.getCourseList.useQuery({ collegeSlug: slug }).data;
 
-  const sidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
+  const getSidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
     { collegeSlug: slug },
     {
       enabled: !!router.query.slug,
     }
-  ).data;
-
-  console.log('sidebarNavItems: ', sidebarNavItems);
+  );
 
   return (
     <>
@@ -34,7 +31,7 @@ export default function CollegeDetailPage() {
         <meta name='description' content={`${college}习题库`} />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <SidebarLayout sidebarNavItems={sidebarNavItems}>
+      <SidebarLayout sidebarNavItems={getSidebarNavItems.data}>
         <div>
           <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
             {college}

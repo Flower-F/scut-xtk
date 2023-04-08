@@ -105,7 +105,7 @@ export const knowledgePointRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        label: z.string().nullish(),
+        label: z.string().optional(),
         courseId: z.string(),
       })
     )
@@ -149,7 +149,7 @@ export const knowledgePointRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        label: z.string().nullish(),
+        label: z.string().optional(),
         id: z.string(),
       })
     )

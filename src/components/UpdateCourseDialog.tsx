@@ -17,7 +17,7 @@ const updateCourseInputSchema = z.object({
 type UpdateCourseInput = z.TypeOf<typeof updateCourseInputSchema>;
 
 export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
-  const [updateCourseError, setUpdateCourseError] = useState('');
+  const [error, setError] = useState('');
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const {
     control,
@@ -37,7 +37,7 @@ export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
       setOpenUpdateDialog(false);
     },
     onError: (err) => {
-      setUpdateCourseError(err.message);
+      setError(err.message);
     },
   });
 
@@ -74,9 +74,7 @@ export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
               </div>
             </div>
 
-            {updateCourseError ? (
-              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{updateCourseError}</div>
-            ) : null}
+            {error ? <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{error}</div> : null}
             <DialogFooter>
               <Button type='submit'>提交</Button>
             </DialogFooter>

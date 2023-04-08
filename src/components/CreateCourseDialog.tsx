@@ -30,7 +30,7 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
   } = useForm<CreateCourseInput>({
     resolver: zodResolver(createCourseInputSchema),
   });
-  const [createCourseError, setCreateCourseError] = useState('');
+  const [error, setError] = useState('');
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const courseContext = api.useContext().course;
@@ -42,7 +42,7 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
       setOpenCreateDialog(false);
     },
     onError: (err) => {
-      setCreateCourseError(err.message);
+      setError(err.message);
     },
   });
 
@@ -83,9 +83,7 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
             </div>
           </div>
 
-          {createCourseError ? (
-            <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{createCourseError}</div>
-          ) : null}
+          {error ? <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{error}</div> : null}
           <DialogFooter>
             <Button type='submit'>提交</Button>
           </DialogFooter>
