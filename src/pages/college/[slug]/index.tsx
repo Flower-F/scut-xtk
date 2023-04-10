@@ -10,14 +10,8 @@ export default function CollegeDetailPage() {
   const router = useRouter();
   const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
 
-  const collegeName = api.college.getCollegeBySlug.useQuery({ collegeSlug: slug }).data?.name || '华南理工习题库';
+  const collegeName = api.college.getCollegeBySlug.useQuery({ collegeSlug: slug }).data?.name || '学院课程';
   const courseList = api.course.getCourseList.useQuery({ collegeSlug: slug }).data;
-  const getSidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
-    { collegeSlug: slug },
-    {
-      enabled: !!router.query.slug,
-    }
-  );
 
   return (
     <>
@@ -26,7 +20,7 @@ export default function CollegeDetailPage() {
         <meta name='description' content={`${collegeName}习题库`} />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <SidebarLayout sidebarNavItems={getSidebarNavItems.data}>
+      <SidebarLayout>
         <div>
           <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
             {collegeName}

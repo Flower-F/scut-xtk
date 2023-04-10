@@ -11,11 +11,11 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ children, mobileNavItems }: MainLayoutProps) {
-  const partialMainNavItems = api.college.getCollegeList.useQuery().data;
+  const collegeList = api.college.getCollegeList.useQuery().data;
 
   return (
     <div className='flex min-h-screen flex-col'>
-      <SiteHeader mobileNavItems={mobileNavItems} mainNavItems={partialMainNavItems} />
+      <SiteHeader mobileNavItems={mobileNavItems} mainNavItems={collegeList} />
       <div className='container flex-1'>{children}</div>
       <SiteFooter />
     </div>

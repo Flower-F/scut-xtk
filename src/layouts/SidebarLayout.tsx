@@ -1,16 +1,25 @@
 import { type ReactNode } from 'react';
+import { useRouter } from 'next/router';
 
-import { type NavItemWithChildren } from '~/types/nav';
 import { MainLayout } from '~/layouts/MainLayout';
 import { SidebarNav } from '~/components/SidebarNav';
 import { ScrollArea } from '~/components/ui/ScrollArea';
+import { api } from '~/utils/api';
 
 interface SidebarLayoutProps {
   children: ReactNode;
-  sidebarNavItems?: NavItemWithChildren[];
 }
 
-export function SidebarLayout({ children, sidebarNavItems }: SidebarLayoutProps) {
+export function SidebarLayout({ children }: SidebarLayoutProps) {
+  const router = useRouter();
+  const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+  const sidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
+    { collegeSlug: slug },
+    {
+      enabled: !!router.query.slug,
+    }
+  ).data;
+
   return (
     <MainLayout mobileNavItems={sidebarNavItems}>
       <div className='flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10'>
