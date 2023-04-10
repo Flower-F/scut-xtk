@@ -34,10 +34,13 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const courseContext = api.useContext().course;
+  const knowledgePointContext = api.useContext().knowledgePoint;
+
   const createCourse = api.course.createCourse.useMutation({
     onSuccess: async () => {
       toast.success('课程创建成功');
       await courseContext.invalidate();
+      await knowledgePointContext.invalidate();
       reset();
       setOpenCreateDialog(false);
     },

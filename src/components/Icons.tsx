@@ -1,4 +1,5 @@
 import {
+  ChevronLeft,
   Edit,
   Laptop,
   Moon,
@@ -36,4 +37,5 @@ export const Icons = {
   PlusCircle,
   Edit,
   XCircle,
+  ChevronLeft,
 };

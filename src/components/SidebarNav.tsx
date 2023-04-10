@@ -2,9 +2,10 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { type SidebarNavItem } from '~/types/nav';
+import { CreateKnowledgePointDialog } from '~/components/CreateKnowledgePointDialog';
+import { Icons } from '~/components/Icons';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/ui/Accordion';
 import { cn } from '~/utils/common';
-import { CreateKnowledgePointDialog } from './CreateKnowledgePointDialog';
 
 interface SidebarNavProps {
   items?: SidebarNavItem[];
@@ -16,19 +17,26 @@ export function SidebarNav({ items }: SidebarNavProps) {
 
   return items?.length ? (
     <div className='w-full'>
-      {items.map((item) => (
-        <div key={item.id} className='pb-6'>
-          <h4 className='scroll-m-20 text-center text-xl font-semibold tracking-tight hover:underline'>
-            <Link href={`/college/${item.slug || ''}`} className='inline-block w-full'>
-              {item.name}
+      {items.map((college) => (
+        <div key={college.id} className='pb-6'>
+          {!knowledgePointId ? (
+            <Link
+              href={`/college/${college.slug || ''}`}
+              className='mb-2 flex w-full items-center text-lg hover:underline'
+            >
+              <Icons.ChevronLeft className='mr-2 h-6 w-6' />
+              管理课程
             </Link>
-          </h4>
-          {item.items?.length && (
+          ) : null}
+
+          {college.items?.length ? (
             <SidebarNavItems
-              items={item.items}
-              collegeSlug={item.slug || ''}
+              items={college.items}
+              collegeSlug={college.slug || ''}
               knowledgePointId={knowledgePointId || ''}
             />
+          ) : (
+            <div>课程列表为空</div>
           )}
         </div>
       ))}

@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { type NavItemWithChildren } from '~/types/nav';
 import { adminProcedure, createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
 export const collegeRouter = createTRPCRouter({
@@ -90,6 +89,15 @@ export const collegeRouter = createTRPCRouter({
         });
       }
     }),
+
+  deleteCollege: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    await ctx.prisma.college.delete({
+      where: {
+        id,
+      },
+    });
+  }),
 
   getCollegeName: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
     const { slug } = input;

@@ -8,49 +8,6 @@ export const knowledgePointRouter = createTRPCRouter({
   getSidebarNavItems: protectedProcedure
     .input(z.object({ collegeSlug: z.string().nullish() }))
     .query(async ({ ctx, input }) => {
-      // const result: NavItemWithChildren[] = [
-      //   {
-      //     id: '1',
-      //     name: '软件学院',
-      //     slug: 'sse',
-      //     items: [
-      //       {
-      //         id: '1',
-      //         name: '编译原理',
-      //         items: [
-      //           {
-      //             id: '1',
-      //             name: 'Token',
-      //             label: '重点',
-      //             items: [],
-      //           },
-      //           {
-      //             id: '2',
-      //             name: 'NFA',
-      //             items: [],
-      //           },
-      //         ],
-      //       },
-      //       {
-      //         id: '2',
-      //         name: '数据结构与算法',
-      //         items: [
-      //           {
-      //             id: '1',
-      //             name: 'DFS',
-      //             items: [],
-      //           },
-      //           {
-      //             id: '2',
-      //             name: 'BFS',
-      //             items: [],
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // ];
-
       const { collegeSlug } = input;
 
       if (!collegeSlug) {
@@ -173,4 +130,13 @@ export const knowledgePointRouter = createTRPCRouter({
         });
       }
     }),
+
+  deleteKnowledgePoint: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    await ctx.prisma.knowledgePoint.delete({
+      where: {
+        id,
+      },
+    });
+  }),
 });

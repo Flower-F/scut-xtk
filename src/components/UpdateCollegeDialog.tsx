@@ -41,10 +41,27 @@ export function UpdateCollegeDialog({ name, id, slug }: { id: string; name: stri
       setError(err.message);
     },
   });
+  const deleteCollege = api.college.deleteCollege.useMutation({
+    onSuccess: async () => {
+      toast.success('学院已删除');
+      await collegeContext.invalidate();
+      reset();
+      setOpenUpdateDialog(false);
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
 
   async function onSubmitUpdateCollege(input: Omit<UpdateCollegeInput, 'id'>, { id }: { id: string }) {
     await updateCollege.mutateAsync({
       ...input,
+      id,
+    });
+  }
+
+  async function onDeleteCollege({ id }: { id: string }) {
+    await deleteCollege.mutateAsync({
       id,
     });
   }
@@ -93,6 +110,10 @@ export function UpdateCollegeDialog({ name, id, slug }: { id: string; name: stri
             </DialogFooter>
           </DialogHeader>
         </form>
+
+        <Button variant='destructive' onClick={() => onDeleteCollege({ id })}>
+          删除该学院
+        </Button>
       </DialogContent>
     </Dialog>
   );

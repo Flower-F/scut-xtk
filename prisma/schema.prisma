@@ -35,9 +35,8 @@ model User {
   image     String?
   role      Role     @default(USER)
   collegeId String?
-  college   College? @relation(fields: [collegeId], references: [id])
+  college   College? @relation(fields: [collegeId], references: [id], onUpdate: Cascade)
 
-  exercises Exercise[]
   bookmarks Bookmark[]
 
   createdAt DateTime @default(now())
@@ -59,7 +58,7 @@ model College {
 model Course {
   id        String  @id @default(cuid())
   name      String
-  college   College @relation(fields: [collegeId], references: [id])
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   collegeId String
 
   knowledgePoints KnowledgePoint[]
@@ -68,7 +67,7 @@ model Course {
 model KnowledgePoint {
   id       String  @id @default(cuid())
   name     String
-  course   Course  @relation(fields: [courseId], references: [id])
+  course   Course  @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseId String
   label    String? // 标签
 
@@ -97,10 +96,8 @@ model Exercise {
   question   String         @db.Text // 题目
   answer     String?        @db.Text // 解析
 
-  knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id])
+  knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   knowledgePointId String
-  user             User           @relation(fields: [userId], references: [id])
-  userId           String
 
   bookmarks Bookmark[]
 
@@ -113,8 +110,8 @@ model Bookmark {
   userId     String
   exerciseId String
 
-  user     User     @relation(fields: [userId], references: [id])
-  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

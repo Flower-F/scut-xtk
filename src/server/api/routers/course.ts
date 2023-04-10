@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
+import { adminProcedure, createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export const courseRouter = createTRPCRouter({
   getCourseList: protectedProcedure.input(z.object({ collegeSlug: z.string() })).query(async ({ ctx, input }) => {
@@ -108,4 +108,13 @@ export const courseRouter = createTRPCRouter({
         });
       }
     }),
+
+  deleteCourse: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    await ctx.prisma.course.delete({
+      where: {
+        id,
+      },
+    });
+  }),
 });

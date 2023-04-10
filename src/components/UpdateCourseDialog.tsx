@@ -29,10 +29,24 @@ export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
   });
 
   const courseContext = api.useContext().course;
+  const knowledgePointContext = api.useContext().knowledgePoint;
   const updateCourse = api.course.updateCourse.useMutation({
     onSuccess: async () => {
       toast.success('课程信息修改成功');
       await courseContext.invalidate();
+      await knowledgePointContext.invalidate();
+      reset();
+      setOpenUpdateDialog(false);
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+  const deleteCourse = api.course.deleteCourse.useMutation({
+    onSuccess: async () => {
+      toast.success('课程已删除');
+      await courseContext.invalidate();
+      await knowledgePointContext.invalidate();
       reset();
       setOpenUpdateDialog(false);
     },
@@ -44,6 +58,12 @@ export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
   async function onSubmitUpdateCourse(input: Omit<UpdateCourseInput, 'id'>, { id }: { id: string }) {
     await updateCourse.mutateAsync({
       ...input,
+      id,
+    });
+  }
+
+  async function onDeleteCourse({ id }: { id: string }) {
+    await deleteCourse.mutateAsync({
       id,
     });
   }
@@ -80,6 +100,10 @@ export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
             </DialogFooter>
           </DialogHeader>
         </form>
+
+        <Button variant='destructive' onClick={() => onDeleteCourse({ id })}>
+          删除该课程
+        </Button>
       </DialogContent>
     </Dialog>
   );
