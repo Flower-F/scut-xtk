@@ -110,7 +110,7 @@ export const collegeRouter = createTRPCRouter({
     }),
 
   getCollegeBySlug: publicProcedure
-    .input(z.object({ collegeSlug: z.string().nullish() }))
+    .input(z.object({ collegeSlug: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       const { collegeSlug } = input;
 

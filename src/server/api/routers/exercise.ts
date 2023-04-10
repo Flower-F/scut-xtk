@@ -1,3 +1,4 @@
+import { DifficultyType, ExerciseType } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -7,8 +8,8 @@ export const exerciseRouter = createTRPCRouter({
   createExercise: protectedProcedure
     .input(
       z.object({
-        type: z.enum(['CHOICE_QUESTION', 'COMPLETION_QUESTION', 'BIG_QUESTION']),
-        difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
+        type: z.nativeEnum(ExerciseType),
+        difficulty: z.nativeEnum(DifficultyType),
         question: z.string().nonempty('题目内容不得为空'),
         answer: z.string(),
         knowledgePointId: z.string().nonempty('知识点id不得为空'),

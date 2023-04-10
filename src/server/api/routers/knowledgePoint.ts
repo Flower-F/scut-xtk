@@ -151,9 +151,13 @@ export const knowledgePointRouter = createTRPCRouter({
     }),
 
   getKnowledgePointById: protectedProcedure
-    .input(z.object({ knowledgePointId: z.string() }))
+    .input(z.object({ knowledgePointId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       const { knowledgePointId } = input;
+
+      if (!knowledgePointId) {
+        return null;
+      }
 
       try {
         const result = await ctx.prisma.knowledgePoint.findFirst({
