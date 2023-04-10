@@ -61,9 +61,9 @@ export const knowledgePointRouter = createTRPCRouter({
   createKnowledgePoint: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().nonempty('知识点名称不得为空'),
         label: z.string().optional(),
-        courseId: z.string(),
+        courseId: z.string().nonempty('课程id不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -96,8 +96,8 @@ export const knowledgePointRouter = createTRPCRouter({
         });
       } catch (error) {
         throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: '不存在对应id的课程',
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
         });
       }
     }),
@@ -105,9 +105,9 @@ export const knowledgePointRouter = createTRPCRouter({
   updateKnowledgePoint: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().nonempty('知识点名称不得为空'),
         label: z.string().optional(),
-        id: z.string(),
+        id: z.string().nonempty('知识点id不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -125,18 +125,28 @@ export const knowledgePointRouter = createTRPCRouter({
         });
       } catch (error) {
         throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: '不存在对应id的课程',
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
         });
       }
     }),
 
-  deleteKnowledgePoint: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const { id } = input;
-    await ctx.prisma.knowledgePoint.delete({
-      where: {
-        id,
-      },
-    });
-  }),
+  deleteKnowledgePoint: protectedProcedure
+    .input(z.object({ id: z.string().nonempty('知识点id不得为空') }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+
+      try {
+        await ctx.prisma.knowledgePoint.delete({
+          where: {
+            id,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
 });

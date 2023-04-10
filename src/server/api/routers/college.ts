@@ -90,17 +90,31 @@ export const collegeRouter = createTRPCRouter({
       }
     }),
 
-  deleteCollege: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const { id } = input;
-    await ctx.prisma.college.delete({
-      where: {
-        id,
-      },
-    });
-  }),
+  deleteCollege: adminProcedure
+    .input(z.object({ id: z.string().nonempty('学院id不得为空') }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
 
-  getCollegeName: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.college.delete({
+          where: {
+            id,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
+
+  getCollegeName: publicProcedure.input(z.object({ slug: z.string().nullish() })).query(async ({ ctx, input }) => {
     const { slug } = input;
+
+    if (!slug) {
+      return null;
+    }
 
     try {
       const result = await ctx.prisma.college.findFirst({

@@ -109,12 +109,22 @@ export const courseRouter = createTRPCRouter({
       }
     }),
 
-  deleteCourse: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const { id } = input;
-    await ctx.prisma.course.delete({
-      where: {
-        id,
-      },
-    });
-  }),
+  deleteCourse: adminProcedure
+    .input(z.object({ id: z.string().nonempty('课程id不得为空') }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+
+      try {
+        await ctx.prisma.course.delete({
+          where: {
+            id,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
 });

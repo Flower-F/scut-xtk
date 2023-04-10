@@ -79,7 +79,7 @@ model KnowledgePoint {
 
 enum ExerciseType {
   CHOICE_QUESTION // 选择题
-  COMPLETITION_QUESTION // 填空题
+  COMPLETION_QUESTION // 填空题
   BIG_QUESTION // 大题
 }
 

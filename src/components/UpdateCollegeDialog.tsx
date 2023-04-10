@@ -4,6 +4,17 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '~/components/ui/AlertDialog';
 import { Button } from '~/components/ui/Button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/Dialog';
 import { Input } from '~/components/ui/Input';
@@ -111,9 +122,21 @@ export function UpdateCollegeDialog({ name, id, slug }: { id: string; name: stri
           </DialogHeader>
         </form>
 
-        <Button variant='destructive' onClick={() => onDeleteCollege({ id })}>
-          删除该学院
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant='destructive'>删除该学院</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>你确定要删除该学院吗？</AlertDialogTitle>
+              <AlertDialogDescription>该操作不可逆，请谨慎决定是否要进行删除操作</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDeleteCollege({ id })}>确定</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </DialogContent>
     </Dialog>
   );
