@@ -45,7 +45,7 @@ export const courseRouter = createTRPCRouter({
   createCourse: protectedProcedure
     .input(
       z.object({
-        name: z.string().nonempty('课程姓名不得为空'),
+        name: z.string().nonempty('课程名称不得为空'),
         collegeSlug: z.string().nonempty('学院标识不得为空'),
       })
     )
@@ -88,7 +88,7 @@ export const courseRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string().nonempty('课程id不得为空'),
-        name: z.string().nonempty('课程姓名不得为空'),
+        name: z.string().nonempty('课程名称不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {

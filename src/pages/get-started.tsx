@@ -1,6 +1,7 @@
+import { type ReactElement } from 'react';
 import Head from 'next/head';
 
-import { SidebarLayout } from '~/layouts/SidebarLayout';
+import { MainLayout } from '~/layouts/MainLayout';
 
 export default function GetStartedPage() {
   return (
@@ -10,9 +11,11 @@ export default function GetStartedPage() {
         <meta name='description' content='习题库的使用说明' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <SidebarLayout>
-        <div>使用说明</div>
-      </SidebarLayout>
+      <div>使用说明</div>
     </>
   );
 }
+
+GetStartedPage.getLayout = function getLayout(page: ReactElement) {
+  return <MainLayout>{page}</MainLayout>;
+};

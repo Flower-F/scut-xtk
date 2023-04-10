@@ -11,11 +11,11 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { api } from '~/utils/api';
 
-const createCourseInputSchema = z.object({
-  name: z.string().nonempty('课程姓名不得为空'),
+export const createCourseInputSchema = z.object({
+  name: z.string().nonempty('课程名称不得为空'),
 });
 
-type CreateCourseInput = z.TypeOf<typeof createCourseInputSchema>;
+export type CreateCourseInput = z.TypeOf<typeof createCourseInputSchema>;
 
 interface CreateCourseDialogProps {
   collegeSlug: string;
@@ -31,7 +31,7 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
     resolver: zodResolver(createCourseInputSchema),
   });
   const [error, setError] = useState('');
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const courseContext = api.useContext().course;
   const knowledgePointContext = api.useContext().knowledgePoint;
@@ -42,17 +42,14 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
       await courseContext.invalidate();
       await knowledgePointContext.invalidate();
       reset();
-      setOpenCreateDialog(false);
+      setOpenDialog(false);
     },
     onError: (err) => {
       setError(err.message);
     },
   });
 
-  async function onSubmitCreateCourse(
-    input: Omit<CreateCourseInput, 'slug'>,
-    { collegeSlug }: { collegeSlug: string }
-  ) {
+  async function onCreateCourse(input: Omit<CreateCourseInput, 'slug'>) {
     await createCourse.mutateAsync({
       ...input,
       collegeSlug,
@@ -60,14 +57,14 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
   }
 
   return (
-    <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-      <DialogTrigger asChild onClick={() => setOpenCreateDialog(true)}>
-        <Button className='gap-2'>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
+        <Button className='gap-2 text-base' size='lg'>
           <Icons.PlusCircle /> 添加课程
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={handleSubmit((data) => onSubmitCreateCourse(data, { collegeSlug }))}>
+        <form onSubmit={handleSubmit(onCreateCourse)}>
           <DialogHeader>
             <DialogTitle>新增课程信息</DialogTitle>
           </DialogHeader>

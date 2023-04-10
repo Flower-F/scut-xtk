@@ -1,11 +1,12 @@
-import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef, type ReactElement } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
 import { MainLayout } from '~/layouts/MainLayout';
 import { CreateCollegeDialog } from '~/components/CreateCollegeDialog';
-import { UpdateCollegeDialog } from '~/components/UpdateCollegeDialog';
+import { EditCollegeDialog } from '~/components/EditCollegeDialog';
+import { buttonVariants } from '~/components/ui/Button';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/common';
 
@@ -21,7 +22,7 @@ export default function CollegePage() {
         <meta name='description' content='学院全览' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <MainLayout>
+      <div>
         <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
           学院全览
         </h3>
@@ -29,7 +30,7 @@ export default function CollegePage() {
           {getCollegeList.data?.length
             ? getCollegeList.data.map((item) =>
                 sessionData?.user.role === 'ADMIN' ? (
-                  <UpdateCollegeDialog key={item.id} id={item.id} name={item.name} slug={item.slug} />
+                  <EditCollegeDialog key={item.id} id={item.id} name={item.name} slug={item.slug} />
                 ) : (
                   <ListItem key={item.id} title={item.name} href={`/college/${item.slug}`} />
                 )
@@ -37,7 +38,7 @@ export default function CollegePage() {
             : null}
           {sessionData?.user.role === 'ADMIN' ? <CreateCollegeDialog /> : null}
         </ul>
-      </MainLayout>
+      </div>
     </>
   );
 }
@@ -47,12 +48,7 @@ const ListItem = forwardRef<ElementRef<typeof Link>, ComponentPropsWithoutRef<ty
     return (
       <li>
         <Link href={href} ref={ref} passHref legacyBehavior {...props}>
-          <a
-            className={cn(
-              'inline-block w-full select-none rounded-md p-3 text-center no-underline outline-none transition-colors hover:bg-slate-100 hover:underline focus:bg-slate-100 dark:hover:bg-slate-700 dark:focus:bg-slate-700',
-              className
-            )}
-          >
+          <a className={cn(buttonVariants({ variant: 'subtle', size: 'lg' }), 'w-full text-base', className)}>
             {title}
           </a>
         </Link>
@@ -61,3 +57,7 @@ const ListItem = forwardRef<ElementRef<typeof Link>, ComponentPropsWithoutRef<ty
   }
 );
 ListItem.displayName = 'ListItem';
+
+CollegePage.getLayout = function getLayout(page: ReactElement) {
+  return <MainLayout>{page}</MainLayout>;
+};

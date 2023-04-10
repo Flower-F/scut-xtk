@@ -26,7 +26,7 @@ export const collegeRouter = createTRPCRouter({
   createCollege: adminProcedure
     .input(
       z.object({
-        name: z.string().nonempty('学院姓名不得为空'),
+        name: z.string().nonempty('学院名称不得为空'),
         slug: z.string().nonempty('学院标识不得为空'),
       })
     )
@@ -65,7 +65,7 @@ export const collegeRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string().nonempty('学院id不得为空'),
-        name: z.string().nonempty('学院姓名不得为空'),
+        name: z.string().nonempty('学院名称不得为空'),
         slug: z.string().nonempty('学院标识不得为空'),
       })
     )

@@ -9,10 +9,10 @@ export const exerciseRouter = createTRPCRouter({
     .input(
       z.object({
         type: z.nativeEnum(ExerciseType, {
-          invalid_type_error: '题目类型只能选择填空、选择和大题',
+          invalid_type_error: '题目类型只能为填空、选择和大题',
         }),
         difficulty: z.nativeEnum(DifficultyType, {
-          invalid_type_error: '题目类型只能选择简单、中等和困难',
+          invalid_type_error: '题目难度只能为简单、中等和困难',
         }),
         question: z.string().nonempty('题目内容不得为空'),
         answer: z.string().nonempty('题目答案不得为空'),
@@ -50,10 +50,10 @@ export const exerciseRouter = createTRPCRouter({
     .input(
       z.object({
         type: z.nativeEnum(ExerciseType, {
-          invalid_type_error: '题目类型只能选择填空、选择和大题',
+          invalid_type_error: '题目类型只能为填空、选择和大题',
         }),
         difficulty: z.nativeEnum(DifficultyType, {
-          invalid_type_error: '题目类型只能选择简单、中等和困难',
+          invalid_type_error: '题目难度只能为简单、中等和困难',
         }),
         question: z.string().nonempty('题目内容不得为空'),
         answer: z.string().nonempty('题目答案不得为空'),

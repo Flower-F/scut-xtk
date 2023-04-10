@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { z } from 'zod';
+import { type z } from 'zod';
 
+import { createCollegeInputSchema, type CreateCollegeInput } from '~/components/CreateCollegeDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,86 +22,96 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { api } from '~/utils/api';
 
-const updateCourseInputSchema = z.object({
-  name: z.string().nonempty('课程姓名不得为空'),
-});
+const updateCollegeInputSchema = createCollegeInputSchema;
+type UpdateCollegeInput = z.TypeOf<typeof updateCollegeInputSchema>;
 
-type UpdateCourseInput = z.TypeOf<typeof updateCourseInputSchema>;
+interface EditCollegeDialogProps extends CreateCollegeInput {
+  id: string;
+}
 
-export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
+export function EditCollegeDialog({ name, id, slug }: EditCollegeDialogProps) {
   const [error, setError] = useState('');
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const {
     control,
+    reset,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<UpdateCourseInput>({
-    resolver: zodResolver(updateCourseInputSchema),
+  } = useForm<UpdateCollegeInput>({
+    resolver: zodResolver(updateCollegeInputSchema),
   });
 
-  const courseContext = api.useContext().course;
-  const knowledgePointContext = api.useContext().knowledgePoint;
-  const updateCourse = api.course.updateCourse.useMutation({
+  const collegeContext = api.useContext().college;
+  const updateCollege = api.college.updateCollege.useMutation({
     onSuccess: async () => {
-      toast.success('课程信息修改成功');
-      await courseContext.invalidate();
-      await knowledgePointContext.invalidate();
+      toast.success('学院信息修改成功');
+      await collegeContext.invalidate();
       reset();
-      setOpenUpdateDialog(false);
+      setOpenDialog(false);
     },
     onError: (err) => {
       setError(err.message);
     },
   });
-  const deleteCourse = api.course.deleteCourse.useMutation({
+  const deleteCollege = api.college.deleteCollege.useMutation({
     onSuccess: async () => {
-      toast.success('课程已删除');
-      await courseContext.invalidate();
-      await knowledgePointContext.invalidate();
+      toast.success('学院已删除');
+      await collegeContext.invalidate();
       reset();
-      setOpenUpdateDialog(false);
+      setOpenDialog(false);
     },
     onError: (err) => {
       setError(err.message);
     },
   });
 
-  async function onSubmitUpdateCourse(input: Omit<UpdateCourseInput, 'id'>, { id }: { id: string }) {
-    await updateCourse.mutateAsync({
+  async function onUpdateCollege(input: Omit<UpdateCollegeInput, 'id'>) {
+    await updateCollege.mutateAsync({
       ...input,
       id,
     });
   }
 
-  async function onDeleteCourse({ id }: { id: string }) {
-    await deleteCourse.mutateAsync({
+  async function onDeleteCollege() {
+    await deleteCollege.mutateAsync({
       id,
     });
   }
 
   return (
-    <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button variant='ghost' className='text-base' onClick={() => setOpenUpdateDialog(true)}>
+        <Button variant='subtle' size='lg' className='w-full text-base' onClick={() => setOpenDialog(true)}>
           {name}
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={handleSubmit((data) => onSubmitUpdateCourse(data, { id }))}>
+        <form onSubmit={handleSubmit(onUpdateCollege)}>
           <DialogHeader>
-            <DialogTitle>编辑课程信息</DialogTitle>
+            <DialogTitle>编辑学院信息</DialogTitle>
             <div className='grid gap-4 py-4'>
               <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='name'>课程名称</Label>
+                <Label htmlFor='name'>学院名称</Label>
                 <Controller
                   name='name'
                   control={control}
                   defaultValue={name || ''}
-                  render={({ field }) => <Input type='text' id='name' placeholder='请输入课程名称' {...field} />}
+                  render={({ field }) => <Input type='text' id='name' placeholder='请输入学院名称' {...field} />}
                 />
                 {errors.name ? (
                   <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.name.message}</div>
+                ) : null}
+              </div>
+              <div className='grid w-full items-center gap-1.5'>
+                <Label htmlFor='slug'>学院标识</Label>
+                <Controller
+                  name='slug'
+                  control={control}
+                  defaultValue={slug || ''}
+                  render={({ field }) => <Input type='text' id='slug' placeholder='请输入学院标识' {...field} />}
+                />
+                {errors.slug ? (
+                  <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.slug.message}</div>
                 ) : null}
               </div>
             </div>
@@ -114,16 +125,16 @@ export function UpdateCourseDialog({ name, id }: { id: string; name: string }) {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant='destructive'>删除该课程</Button>
+            <Button variant='destructive'>删除该学院</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>你确定要删除该课程吗？</AlertDialogTitle>
+              <AlertDialogTitle>你确定要删除该学院吗？</AlertDialogTitle>
               <AlertDialogDescription>该操作不可逆，请谨慎决定是否要进行删除操作</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>取消</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onDeleteCourse({ id })}>确定</AlertDialogAction>
+              <AlertDialogAction onClick={onDeleteCollege}>确定</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

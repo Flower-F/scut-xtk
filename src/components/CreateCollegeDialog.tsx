@@ -11,12 +11,12 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { api } from '~/utils/api';
 
-const createCollegeInputSchema = z.object({
-  name: z.string().nonempty('学院姓名不得为空'),
+export const createCollegeInputSchema = z.object({
+  name: z.string().nonempty('学院名称不得为空'),
   slug: z.string().nonempty('学院标识不得为空'),
 });
 
-type CreateCollegeInput = z.TypeOf<typeof createCollegeInputSchema>;
+export type CreateCollegeInput = z.TypeOf<typeof createCollegeInputSchema>;
 
 export function CreateCollegeDialog() {
   const {
@@ -28,7 +28,7 @@ export function CreateCollegeDialog() {
     resolver: zodResolver(createCollegeInputSchema),
   });
   const [error, setError] = useState('');
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const collegeContext = api.useContext().college;
   const createCollege = api.college.createCollege.useMutation({
@@ -36,26 +36,26 @@ export function CreateCollegeDialog() {
       toast.success('学院创建成功');
       await collegeContext.invalidate();
       reset();
-      setOpenCreateDialog(false);
+      setOpenDialog(false);
     },
     onError: (err) => {
       setError(err.message);
     },
   });
 
-  async function onSubmitCreateCollege(input: CreateCollegeInput) {
+  async function onCreateCollege(input: CreateCollegeInput) {
     await createCollege.mutateAsync(input);
   }
 
   return (
-    <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-      <DialogTrigger asChild onClick={() => setOpenCreateDialog(true)}>
-        <Button className='gap-2'>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
+        <Button className='gap-2 text-base' size='lg'>
           <Icons.PlusCircle /> 添加学院
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={handleSubmit(onSubmitCreateCollege)}>
+        <form onSubmit={handleSubmit(onCreateCollege)}>
           <DialogHeader>
             <DialogTitle>新增学院信息</DialogTitle>
           </DialogHeader>

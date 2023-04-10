@@ -10,12 +10,12 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { api } from '~/utils/api';
 
-const createKnowledgePointInputSchema = z.object({
-  name: z.string().nonempty('知识点姓名不得为空'),
+export const createKnowledgePointInputSchema = z.object({
+  name: z.string().nonempty('知识点名称不得为空'),
   label: z.string().optional(),
 });
 
-type CreateKnowledgePointInput = z.TypeOf<typeof createKnowledgePointInputSchema>;
+export type CreateKnowledgePointInput = z.TypeOf<typeof createKnowledgePointInputSchema>;
 
 interface CreateKnowledgePointDialogProps {
   courseId: string;
@@ -31,7 +31,7 @@ export function CreateKnowledgePointDialog({ courseId }: CreateKnowledgePointDia
     resolver: zodResolver(createKnowledgePointInputSchema),
   });
   const [error, setError] = useState('');
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const knowledgePointContext = api.useContext().knowledgePoint;
   const createKnowledgePoint = api.knowledgePoint.createKnowledgePoint.useMutation({
@@ -39,18 +39,14 @@ export function CreateKnowledgePointDialog({ courseId }: CreateKnowledgePointDia
       toast.success('知识点创建成功');
       await knowledgePointContext.invalidate();
       reset();
-      setOpenCreateDialog(false);
+      setOpenDialog(false);
     },
     onError: (err) => {
       setError(err.message);
     },
   });
 
-  async function onSubmitCreateKnowledgePoint(
-    input: Omit<CreateKnowledgePointInput, 'courseId'>,
-    { courseId }: { courseId: string }
-  ) {
-    console.log('test');
+  async function onCreateKnowledgePoint(input: Omit<CreateKnowledgePointInput, 'courseId'>) {
     await createKnowledgePoint.mutateAsync({
       ...input,
       courseId,
@@ -58,14 +54,14 @@ export function CreateKnowledgePointDialog({ courseId }: CreateKnowledgePointDia
   }
 
   return (
-    <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-      <DialogTrigger asChild onClick={() => setOpenCreateDialog(true)}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
         <Button className='w-full' variant='subtle'>
           添加知识点
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
-        <form onSubmit={handleSubmit((data) => onSubmitCreateKnowledgePoint(data, { courseId }))}>
+        <form onSubmit={handleSubmit(onCreateKnowledgePoint)}>
           <DialogHeader>
             <DialogTitle>新增知识点</DialogTitle>
           </DialogHeader>
