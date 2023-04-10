@@ -149,4 +149,25 @@ export const knowledgePointRouter = createTRPCRouter({
         });
       }
     }),
+
+  getKnowledgePointById: protectedProcedure
+    .input(z.object({ knowledgePointId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { knowledgePointId } = input;
+
+      try {
+        const result = await ctx.prisma.knowledgePoint.findFirst({
+          where: {
+            id: knowledgePointId,
+          },
+        });
+
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
 });

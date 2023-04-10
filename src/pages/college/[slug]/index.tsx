@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
@@ -10,13 +9,9 @@ import { api } from '~/utils/api';
 export default function CollegeDetailPage() {
   const router = useRouter();
   const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
-  const college = api.college.getCollegeName.useQuery({ slug }).data?.name || '华南理工习题库';
 
-  const searchParams = useSearchParams();
-  const knowledgePointId = searchParams.get('knowledgePointId');
-
+  const collegeName = api.college.getCollegeBySlug.useQuery({ collegeSlug: slug }).data?.name || '华南理工习题库';
   const courseList = api.course.getCourseList.useQuery({ collegeSlug: slug }).data;
-
   const getSidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
     { collegeSlug: slug },
     {
@@ -27,14 +22,14 @@ export default function CollegeDetailPage() {
   return (
     <>
       <Head>
-        <title>{college}</title>
-        <meta name='description' content={`${college}习题库`} />
+        <title>{collegeName}</title>
+        <meta name='description' content={`${collegeName}习题库`} />
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <SidebarLayout sidebarNavItems={getSidebarNavItems.data}>
         <div>
           <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
-            {college}
+            {collegeName}
           </h3>
           <ul className='grid w-full grid-cols-2 gap-3 p-4'>
             {courseList?.length

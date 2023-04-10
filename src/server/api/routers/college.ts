@@ -109,29 +109,31 @@ export const collegeRouter = createTRPCRouter({
       }
     }),
 
-  getCollegeName: publicProcedure.input(z.object({ slug: z.string().nullish() })).query(async ({ ctx, input }) => {
-    const { slug } = input;
+  getCollegeBySlug: publicProcedure
+    .input(z.object({ collegeSlug: z.string().nullish() }))
+    .query(async ({ ctx, input }) => {
+      const { collegeSlug } = input;
 
-    if (!slug) {
-      return null;
-    }
+      if (!collegeSlug) {
+        return null;
+      }
 
-    try {
-      const result = await ctx.prisma.college.findFirst({
-        where: {
-          slug,
-        },
-        select: {
-          name: true,
-        },
-      });
+      try {
+        const result = await ctx.prisma.college.findFirst({
+          where: {
+            slug: collegeSlug,
+          },
+          select: {
+            name: true,
+          },
+        });
 
-      return result;
-    } catch (error) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: '服务器出现未知错误',
-      });
-    }
-  }),
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
 });

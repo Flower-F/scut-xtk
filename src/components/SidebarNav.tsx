@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 import { type SidebarNavItem } from '~/types/nav';
 import { CreateKnowledgePointDialog } from '~/components/CreateKnowledgePointDialog';
@@ -12,14 +12,14 @@ interface SidebarNavProps {
 }
 
 export function SidebarNav({ items }: SidebarNavProps) {
-  const searchParams = useSearchParams();
-  const knowledgePointId = searchParams.get('knowledgePointId');
+  const router = useRouter();
+  const knowledgePointId = router.query.kid && typeof router.query.kid === 'string' ? router.query.kid : '';
 
   return items?.length ? (
     <div className='w-full'>
       {items.map((college) => (
         <div key={college.id} className='pb-6'>
-          {!knowledgePointId ? (
+          {knowledgePointId ? (
             <Link
               href={`/college/${college.slug || ''}`}
               className='mb-2 flex w-full items-center text-lg hover:underline'
@@ -60,7 +60,7 @@ export function SidebarNavItems({ items, knowledgePointId, collegeSlug }: Sideba
             {course.items.map((knowledgePoint) => (
               <AccordionContent key={knowledgePoint.id}>
                 <Link
-                  href={`/college/${collegeSlug}?knowledgePointId=${knowledgePoint.id}`}
+                  href={`/college/${collegeSlug}/${knowledgePoint.id}`}
                   className={cn(
                     'group flex w-full items-center rounded-md px-2 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800',
                     knowledgePoint.disabled && 'cursor-not-allowed opacity-60',

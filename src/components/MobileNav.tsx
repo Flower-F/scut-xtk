@@ -59,7 +59,7 @@ export function MobileNav({ items }: MobileNavProps) {
                   {item.items.length &&
                     item.items.map((item1) => (
                       <DropdownMenuItem key={item1.name} asChild>
-                        <Link href={`/college/${item.slug || ''}?knowledgePointId=${item1.id}`}>{item1.name}</Link>
+                        <Link href={`/college/${item.slug || ''}/${item1.id}`}>{item1.name}</Link>
                       </DropdownMenuItem>
                     ))}
                 </DropdownMenuGroup>
