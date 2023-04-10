@@ -8,15 +8,20 @@ export const exerciseRouter = createTRPCRouter({
   createExercise: protectedProcedure
     .input(
       z.object({
-        type: z.nativeEnum(ExerciseType),
-        difficulty: z.nativeEnum(DifficultyType),
+        type: z.nativeEnum(ExerciseType, {
+          invalid_type_error: '题目类型只能选择填空、选择和大题',
+        }),
+        difficulty: z.nativeEnum(DifficultyType, {
+          invalid_type_error: '题目类型只能选择简单、中等和困难',
+        }),
         question: z.string().nonempty('题目内容不得为空'),
-        answer: z.string(),
+        answer: z.string().nonempty('题目答案不得为空'),
+        analysis: z.string().optional(),
         knowledgePointId: z.string().nonempty('知识点id不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { type, difficulty, question, answer, knowledgePointId } = input;
+      const { type, difficulty, question, answer, knowledgePointId, analysis } = input;
 
       try {
         await ctx.prisma.exercise.create({
@@ -25,6 +30,7 @@ export const exerciseRouter = createTRPCRouter({
             difficulty,
             question,
             answer,
+            analysis,
             knowledgePoint: {
               connect: {
                 id: knowledgePointId,
@@ -43,16 +49,21 @@ export const exerciseRouter = createTRPCRouter({
   updateExercise: protectedProcedure
     .input(
       z.object({
-        type: z.enum(['CHOICE_QUESTION', 'COMPLETION_QUESTION', 'BIG_QUESTION']),
-        difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
+        type: z.nativeEnum(ExerciseType, {
+          invalid_type_error: '题目类型只能选择填空、选择和大题',
+        }),
+        difficulty: z.nativeEnum(DifficultyType, {
+          invalid_type_error: '题目类型只能选择简单、中等和困难',
+        }),
         question: z.string().nonempty('题目内容不得为空'),
-        answer: z.string(),
+        answer: z.string().nonempty('题目答案不得为空'),
+        analysis: z.string().optional(),
         id: z.string().nonempty('习题id不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { type, difficulty, question, answer, id } = input;
+        const { type, difficulty, question, answer, id, analysis } = input;
 
         await ctx.prisma.exercise.update({
           data: {
@@ -60,6 +71,7 @@ export const exerciseRouter = createTRPCRouter({
             difficulty,
             question,
             answer,
+            analysis,
           },
           where: {
             id,
@@ -73,12 +85,14 @@ export const exerciseRouter = createTRPCRouter({
       }
     }),
 
-  deleteExercise: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const { id } = input;
-    await ctx.prisma.exercise.delete({
-      where: {
-        id,
-      },
-    });
-  }),
+  deleteExercise: protectedProcedure
+    .input(z.object({ id: z.string().nonempty('习题id不能为空') }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      await ctx.prisma.exercise.delete({
+        where: {
+          id,
+        },
+      });
+    }),
 });

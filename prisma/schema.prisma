@@ -94,7 +94,8 @@ model Exercise {
   type       ExerciseType // 题目类型
   difficulty DifficultyType // 题目难度
   question   String         @db.Text // 题目
-  answer     String?        @db.Text // 解析
+  answer     String         @db.Text // 答案
+  analysis   String?        @db.Text // 解析
 
   knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   knowledgePointId String

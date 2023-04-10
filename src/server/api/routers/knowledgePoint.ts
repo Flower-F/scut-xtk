@@ -6,7 +6,7 @@ import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export const knowledgePointRouter = createTRPCRouter({
   getSidebarNavItems: protectedProcedure
-    .input(z.object({ collegeSlug: z.string().nullish() }))
+    .input(z.object({ collegeSlug: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       const { collegeSlug } = input;
 
