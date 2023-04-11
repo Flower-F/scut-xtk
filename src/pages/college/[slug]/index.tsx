@@ -27,7 +27,7 @@ export default function CollegeDetailPage() {
         </h3>
         <ul className='grid w-full grid-cols-2 gap-3 p-4 lg:grid-cols-3'>
           {courseList?.length
-            ? courseList.map((item) => <EditCourseDialog key={item.id} id={item.id} name={item.name} />)
+            ? courseList.map((item) => <EditCourseDialog key={item.id} courseId={item.id} name={item.name} />)
             : null}
           <CreateCourseDialog collegeSlug={slug} />
         </ul>

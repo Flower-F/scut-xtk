@@ -26,10 +26,10 @@ const updateCourseInputSchema = createCourseInputSchema;
 type UpdateCourseInput = z.TypeOf<typeof updateCourseInputSchema>;
 
 interface EditCourseDialogProps extends CreateCourseInput {
-  id: string;
+  courseId: string;
 }
 
-export function EditCourseDialog({ name, id }: EditCourseDialogProps) {
+export function EditCourseDialog({ name, courseId }: EditCourseDialogProps) {
   const [error, setError] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const {
@@ -71,13 +71,13 @@ export function EditCourseDialog({ name, id }: EditCourseDialogProps) {
   async function onUpdateCourse(input: Omit<UpdateCourseInput, 'id'>) {
     await updateCourse.mutateAsync({
       ...input,
-      id,
+      id: courseId,
     });
   }
 
   async function onDeleteCourse() {
     await deleteCourse.mutateAsync({
-      id,
+      id: courseId,
     });
   }
 

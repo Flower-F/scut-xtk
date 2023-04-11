@@ -42,6 +42,11 @@ export const knowledgePointRouter = createTRPCRouter({
           where: {
             courseId: course.id,
           },
+          select: {
+            id: true,
+            name: true,
+            label: true,
+          },
         });
 
         result[0]?.items.push({

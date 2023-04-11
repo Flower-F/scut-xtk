@@ -15,7 +15,7 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 
 export const loginInputSchema = z.object({
-  email: z.string().nonempty('邮箱不得为空').email('请输入正确的邮箱格式'),
+  email: z.string().nonempty('邮箱不得为空').email('请输入正确的邮箱'),
   password: z.string().min(8, '密码长度最少为8位'),
 });
 

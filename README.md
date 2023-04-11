@@ -26,15 +26,15 @@ The relationship of major, knowledge point and questions: each major has a lot o
   - Permission management(Special admin user and Normal user)
   - Personal Center
   - Question favorites
-- Major Module
+- College Module
   - Basic CRUD
 - Course Module
   - Basic CRUD
-- Knowledge Point Module
+- KnowledgePoint Module
   - Basic CRUD
 - Question Module
   - Basic CRUD
-  - Filter questions based on some attributes like the difficulty, type and knowledge point
+  - Filter questions based on some attributes like the difficulty and type
 - Paper Module
   - One click to generate a paper based on the settings
   - Collect the questions you want and combine them into a paper

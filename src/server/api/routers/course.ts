@@ -31,6 +31,10 @@ export const courseRouter = createTRPCRouter({
           where: {
             collegeId: college.id,
           },
+          select: {
+            id: true,
+            name: true,
+          },
         });
 
         return result;

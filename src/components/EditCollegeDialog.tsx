@@ -26,10 +26,10 @@ const updateCollegeInputSchema = createCollegeInputSchema;
 type UpdateCollegeInput = z.TypeOf<typeof updateCollegeInputSchema>;
 
 interface EditCollegeDialogProps extends CreateCollegeInput {
-  id: string;
+  collegeId: string;
 }
 
-export function EditCollegeDialog({ name, id, slug }: EditCollegeDialogProps) {
+export function EditCollegeDialog({ name, collegeId, slug }: EditCollegeDialogProps) {
   const [error, setError] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const {
@@ -68,13 +68,13 @@ export function EditCollegeDialog({ name, id, slug }: EditCollegeDialogProps) {
   async function onUpdateCollege(input: Omit<UpdateCollegeInput, 'id'>) {
     await updateCollege.mutateAsync({
       ...input,
-      id,
+      id: collegeId,
     });
   }
 
   async function onDeleteCollege() {
     await deleteCollege.mutateAsync({
-      id,
+      id: collegeId,
     });
   }
 

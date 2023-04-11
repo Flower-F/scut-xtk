@@ -78,12 +78,14 @@ model KnowledgePoint {
 }
 
 enum ExerciseType {
+  ALL_QUESTION // 所有
   CHOICE_QUESTION // 选择题
   COMPLETION_QUESTION // 填空题
   BIG_QUESTION // 大题
 }
 
 enum DifficultyType {
+  ANY // 任意
   EASY // 简单
   MEDIUM // 中等
   HARD // 困难

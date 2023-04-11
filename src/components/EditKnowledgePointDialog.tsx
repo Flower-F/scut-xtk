@@ -5,10 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { type z } from 'zod';
 
-import {
-  createKnowledgePointInputSchema,
-  type CreateKnowledgePointInput,
-} from '~/components/CreateKnowledgePointDialog';
+import { createKnowledgePointInputSchema } from '~/components/CreateKnowledgePointDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,12 +26,11 @@ import { api } from '~/utils/api';
 const updateKnowledgePointInputSchema = createKnowledgePointInputSchema;
 type UpdateKnowledgePointInput = z.TypeOf<typeof updateKnowledgePointInputSchema>;
 
-interface EditKnowledgePointDialogProps extends CreateKnowledgePointInput {
-  id: string;
-  slug: string;
+interface EditKnowledgePointDialogProps {
+  knowledgePointId: string;
 }
 
-export function EditKnowledgePointDialog({ name, label, id, slug }: EditKnowledgePointDialogProps) {
+export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePointDialogProps) {
   const [error, setError] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const {
@@ -42,10 +38,19 @@ export function EditKnowledgePointDialog({ name, label, id, slug }: EditKnowledg
     reset,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<UpdateKnowledgePointInput>({
     resolver: zodResolver(updateKnowledgePointInputSchema),
   });
   const router = useRouter();
+  const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+
+  const knowledgePoint = api.knowledgePoint.getKnowledgePointById.useQuery(
+    { knowledgePointId },
+    {
+      enabled: !!router.query.kid,
+    }
+  ).data;
 
   const knowledgePointContext = api.useContext().knowledgePoint;
   const updateKnowledgePoint = api.knowledgePoint.updateKnowledgePoint.useMutation({
@@ -75,20 +80,26 @@ export function EditKnowledgePointDialog({ name, label, id, slug }: EditKnowledg
   async function onUpdateKnowledgePoint(input: Omit<UpdateKnowledgePointInput, 'id'>) {
     await updateKnowledgePoint.mutateAsync({
       ...input,
-      id,
+      id: knowledgePointId,
     });
   }
 
   async function onDeleteKnowledgePoint() {
     await deleteKnowledgePoint.mutateAsync({
-      id,
+      id: knowledgePointId,
     });
+  }
+
+  function initialDialog() {
+    setOpenDialog(true);
+    setValue('label', knowledgePoint?.label || '');
+    setValue('name', knowledgePoint?.name || '');
   }
 
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpenDialog(true)}>修改知识点</Button>
+        <Button onClick={initialDialog}>修改知识点</Button>
       </DialogTrigger>
       <DialogContent className='max-w-sm'>
         <form onSubmit={handleSubmit(onUpdateKnowledgePoint)}>
@@ -100,7 +111,7 @@ export function EditKnowledgePointDialog({ name, label, id, slug }: EditKnowledg
                 <Controller
                   name='name'
                   control={control}
-                  defaultValue={name || ''}
+                  defaultValue=''
                   render={({ field }) => <Input type='text' id='name' placeholder='请输入知识点名称' {...field} />}
                 />
                 {errors.name ? (
@@ -112,7 +123,7 @@ export function EditKnowledgePointDialog({ name, label, id, slug }: EditKnowledg
                 <Controller
                   name='label'
                   control={control}
-                  defaultValue={label || ''}
+                  defaultValue=''
                   render={({ field }) => <Input type='text' id='label' placeholder='请输入知识点标签' {...field} />}
                 />
                 {errors.label ? (
