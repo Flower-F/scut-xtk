@@ -18,13 +18,14 @@ export const exerciseRouter = createTRPCRouter({
         answer: z.string().nonempty('题目答案不得为空'),
         analysis: z.string().optional(),
         knowledgePointId: z.string().nonempty('知识点id不得为空'),
+        options: z.array(z.object({ content: z.string().nonempty('选项内容不得为空') }).optional()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { type, difficulty, question, answer, knowledgePointId, analysis } = input;
+      const { type, difficulty, question, answer, knowledgePointId, analysis, options } = input;
 
       try {
-        await ctx.prisma.exercise.create({
+        const exercise = await ctx.prisma.exercise.create({
           data: {
             type,
             difficulty,
@@ -38,6 +39,24 @@ export const exerciseRouter = createTRPCRouter({
             },
           },
         });
+
+        if (options && options.length > 0) {
+          for await (const option of options) {
+            if (!option) {
+              continue;
+            }
+            await ctx.prisma.option.create({
+              data: {
+                content: option.content,
+                exercise: {
+                  connect: {
+                    id: exercise.id,
+                  },
+                },
+              },
+            });
+          }
+        }
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -94,5 +113,48 @@ export const exerciseRouter = createTRPCRouter({
           id,
         },
       });
+    }),
+
+  getExerciseList: protectedProcedure
+    .input(
+      z.object({
+        knowledgePointId: z.string(),
+        cursor: z.string().nullish(),
+        limit: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { knowledgePointId, cursor, limit } = input;
+
+      const exerciseList = await ctx.prisma.exercise.findMany({
+        select: {
+          id: true,
+          type: true,
+          difficulty: true,
+          question: true,
+          answer: true,
+          options: {
+            select: {
+              content: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: limit + 1,
+        where: {
+          knowledgePointId,
+        },
+        cursor: cursor ? { id: cursor } : undefined,
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (exerciseList.length > limit) {
+        const nextItem = exerciseList.pop();
+        if (nextItem) nextCursor = nextItem.id;
+      }
+
+      return { exerciseList, nextCursor };
     }),
 });

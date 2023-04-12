@@ -91,6 +91,17 @@ enum DifficultyType {
   HARD // 困难
 }
 
+model Option {
+  id      String @id @default(cuid())
+  content String
+
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+  exerciseId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Exercise {
   id         String         @id @default(cuid())
   type       ExerciseType // 题目类型
@@ -103,6 +114,7 @@ model Exercise {
   knowledgePointId String
 
   bookmarks Bookmark[]
+  options   Option[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { DifficultyType, ExerciseType } from '@prisma/client';
 
+// import InfiniteScroll from 'react-infinite-scroll-component';
+
 import { SidebarLayout } from '~/layouts/SidebarLayout';
 import { CreateExerciseDialog } from '~/components/CreateExerciseDialog';
 import { EditKnowledgePointDialog } from '~/components/EditKnowledgePointDialog';
@@ -10,7 +12,10 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/RadioGroup';
+import { difficultyTypeMapping, exerciseTypeMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
+
+const LIMIT = 10;
 
 export default function ExercisePage() {
   const router = useRouter();
@@ -24,6 +29,13 @@ export default function ExercisePage() {
   ).data;
 
   const knowledgePointName = knowledgePoint?.name || '知识点习题';
+
+  const exerciseList = api.exercise.getExerciseList.useInfiniteQuery({
+    limit: LIMIT,
+    knowledgePointId,
+  }).data;
+
+  console.log('exerciseList: ', exerciseList);
 
   return (
     <>
@@ -56,17 +68,7 @@ export default function ExercisePage() {
               {(Object.keys(DifficultyType) as Array<keyof typeof DifficultyType>).map((key) => (
                 <div className='flex items-center space-x-2' key={key}>
                   <RadioGroupItem value={DifficultyType[key]} id={DifficultyType[key]} />
-                  <Label htmlFor={DifficultyType[key]}>
-                    {DifficultyType[key] === 'EASY'
-                      ? '简单'
-                      : DifficultyType[key] === 'MEDIUM'
-                      ? '中等'
-                      : DifficultyType[key] === 'HARD'
-                      ? '困难'
-                      : DifficultyType[key] === 'ANY'
-                      ? '所有'
-                      : null}
-                  </Label>
+                  <Label htmlFor={DifficultyType[key]}>{difficultyTypeMapping[DifficultyType[key]]}</Label>
                 </div>
               ))}
             </RadioGroup>
@@ -78,17 +80,7 @@ export default function ExercisePage() {
               {(Object.keys(ExerciseType) as Array<keyof typeof ExerciseType>).map((key) => (
                 <div className='flex items-center space-x-2' key={key}>
                   <RadioGroupItem value={ExerciseType[key]} id={ExerciseType[key]} />
-                  <Label htmlFor={ExerciseType[key]}>
-                    {ExerciseType[key] === 'CHOICE_QUESTION'
-                      ? '选择题'
-                      : ExerciseType[key] === 'COMPLETION_QUESTION'
-                      ? '填空题'
-                      : ExerciseType[key] === 'BIG_QUESTION'
-                      ? '大题'
-                      : ExerciseType[key] === 'ALL_QUESTION'
-                      ? '所有'
-                      : null}
-                  </Label>
+                  <Label htmlFor={ExerciseType[key]}>{exerciseTypeMapping[ExerciseType[key]]}</Label>
                 </div>
               ))}
             </RadioGroup>
