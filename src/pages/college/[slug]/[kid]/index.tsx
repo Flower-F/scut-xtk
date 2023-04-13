@@ -1,30 +1,19 @@
-import { forwardRef, type ComponentPropsWithoutRef, type ElementRef, type ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { DifficultyType, ExerciseType } from '@prisma/client';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
 import { CreateExerciseDialog } from '~/components/CreateExerciseDialog';
 import { EditKnowledgePointDialog } from '~/components/EditKnowledgePointDialog';
+import { ExerciseItem } from '~/components/ExerciseItem';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/RadioGroup';
-import {
-  difficultyTypeMapping,
-  difficultyWithoutAllMapping,
-  exerciseTypeMapping,
-  exerciseTypeWithoutAllMapping,
-} from '~/constants/mapping';
+import { difficultyTypeMapping, exerciseTypeMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
-import { cn } from '~/utils/common';
-import 'dayjs/locale/zh-cn';
-
-dayjs.extend(relativeTime);
 
 const LIMIT = 10;
 
@@ -107,66 +96,37 @@ export default function KnowledgePointDetailPage() {
           dataLength={getExerciseList.data?.pages.flatMap((page) => page.exerciseList).length ?? 0}
           next={getExerciseList.fetchNextPage}
           hasMore={Boolean(getExerciseList.hasNextPage)}
-          loader={<h4>Loading...</h4>}
-          endMessage={<p className='text-center font-bold'>已经到底了</p>}
+          loader={<h4>试题加载中...</h4>}
+          endMessage={<div className='text-center font-bold'>已经到底了</div>}
         >
-          {getExerciseList.isSuccess &&
-            getExerciseList.data.pages
-              .flatMap((page) => page.exerciseList)
-              .map((exercise, index) => {
-                return (
-                  <ListItem key={index} href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}>
-                    <p>{exerciseTypeWithoutAllMapping[exercise.type]}</p>
-                    <p>{difficultyWithoutAllMapping[exercise.difficulty]}</p>
-                    <p>{exercise.question}</p>
-
-                    {exercise.options.length > 0 ? (
-                      <ul>
-                        {exercise.options.map((option, index) => (
-                          <li key={option.id}>
-                            <div>{String.fromCharCode(String(index + 1).charCodeAt(0) + 16)}.</div>
-                            <div>{option.content}</div>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-
-                    <p>{exercise.answer}</p>
-                    <p>{exercise.analysis}</p>
-                    <span>{dayjs(exercise.updatedAt).locale('zh-cn').fromNow()}</span>
-                  </ListItem>
-                );
-              })}
+          <ul className='my-6 space-y-6'>
+            {getExerciseList.isSuccess &&
+              getExerciseList.data.pages
+                .flatMap((page) => page.exerciseList)
+                .map((exercise) => {
+                  return (
+                    <ExerciseItem
+                      key={exercise.id}
+                      knowledgePointId={knowledgePointId}
+                      collegeSlug={collegeSlug}
+                      user={exercise.user}
+                      id={exercise.id}
+                      updatedAt={exercise.updatedAt}
+                      options={exercise.options}
+                      type={exercise.type}
+                      difficulty={exercise.difficulty}
+                      question={exercise.question}
+                      answer={exercise.answer}
+                      analysis={exercise.analysis}
+                    />
+                  );
+                })}
+          </ul>
         </InfiniteScroll>
       </div>
     </>
   );
 }
-
-const ListItem = forwardRef<ElementRef<typeof Link>, ComponentPropsWithoutRef<typeof Link>>(
-  ({ className, title, children, href, ...props }, ref) => {
-    return (
-      <li>
-        <Link
-          href={href}
-          ref={ref}
-          legacyBehavior
-          {...props}
-          className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-slate-100 focus:bg-slate-100 dark:hover:bg-slate-700 dark:focus:bg-slate-700',
-            className
-          )}
-        >
-          <div>
-            <div className='text-sm font-medium leading-none'>{title}</div>
-            {children}
-          </div>
-        </Link>
-      </li>
-    );
-  }
-);
-ListItem.displayName = 'ListItem';
 
 KnowledgePointDetailPage.getLayout = function getLayout(page: ReactElement) {
   return <SidebarLayout>{page}</SidebarLayout>;
