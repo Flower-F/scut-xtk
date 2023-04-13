@@ -91,12 +91,12 @@ export const courseRouter = createTRPCRouter({
   updateCourse: protectedProcedure
     .input(
       z.object({
-        id: z.string().nonempty('课程id不得为空'),
+        courseId: z.string().nonempty('课程id不得为空'),
         name: z.string().nonempty('课程名称不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, id } = input;
+      const { name, courseId } = input;
 
       try {
         await ctx.prisma.course.update({
@@ -104,7 +104,7 @@ export const courseRouter = createTRPCRouter({
             name,
           },
           where: {
-            id,
+            id: courseId,
           },
         });
       } catch (error) {
@@ -116,14 +116,14 @@ export const courseRouter = createTRPCRouter({
     }),
 
   deleteCourse: protectedProcedure
-    .input(z.object({ id: z.string().nonempty('课程id不得为空') }))
+    .input(z.object({ courseId: z.string().nonempty('课程id不得为空') }))
     .mutation(async ({ ctx, input }) => {
-      const { id } = input;
+      const { courseId } = input;
 
       try {
         await ctx.prisma.course.delete({
           where: {
-            id,
+            id: courseId,
           },
         });
       } catch (error) {

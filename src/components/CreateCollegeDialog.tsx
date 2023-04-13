@@ -13,7 +13,7 @@ import { api } from '~/utils/api';
 
 export const createCollegeInputSchema = z.object({
   name: z.string().nonempty('学院名称不得为空'),
-  slug: z.string().nonempty('学院标识不得为空'),
+  collegeSlug: z.string().nonempty('学院标识不得为空'),
 });
 
 export type CreateCollegeInput = z.TypeOf<typeof createCollegeInputSchema>;
@@ -75,13 +75,13 @@ export function CreateCollegeDialog() {
             <div className='grid w-full items-center gap-1.5'>
               <Label htmlFor='slug'>学院标识</Label>
               <Controller
-                name='slug'
+                name='collegeSlug'
                 control={control}
                 defaultValue=''
                 render={({ field }) => <Input type='text' id='slug' placeholder='请输入学院标识' {...field} />}
               />
-              {errors.slug ? (
-                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.slug.message}</div>
+              {errors.collegeSlug ? (
+                <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.collegeSlug.message}</div>
               ) : null}
             </div>
           </div>

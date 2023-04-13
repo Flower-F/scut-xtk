@@ -29,7 +29,7 @@ interface EditCollegeDialogProps extends CreateCollegeInput {
   collegeId: string;
 }
 
-export function EditCollegeDialog({ name, collegeId, slug }: EditCollegeDialogProps) {
+export function EditCollegeDialog({ name, collegeId, collegeSlug }: EditCollegeDialogProps) {
   const [error, setError] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const {
@@ -68,13 +68,13 @@ export function EditCollegeDialog({ name, collegeId, slug }: EditCollegeDialogPr
   async function onUpdateCollege(input: Omit<UpdateCollegeInput, 'id'>) {
     await updateCollege.mutateAsync({
       ...input,
-      id: collegeId,
+      collegeId,
     });
   }
 
   async function onDeleteCollege() {
     await deleteCollege.mutateAsync({
-      id: collegeId,
+      collegeId,
     });
   }
 
@@ -105,13 +105,15 @@ export function EditCollegeDialog({ name, collegeId, slug }: EditCollegeDialogPr
               <div className='grid w-full items-center gap-1.5'>
                 <Label htmlFor='slug'>学院标识</Label>
                 <Controller
-                  name='slug'
+                  name='collegeSlug'
                   control={control}
-                  defaultValue={slug || ''}
+                  defaultValue={collegeSlug || ''}
                   render={({ field }) => <Input type='text' id='slug' placeholder='请输入学院标识' {...field} />}
                 />
-                {errors.slug ? (
-                  <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.slug.message}</div>
+                {errors.collegeSlug ? (
+                  <div className='text-sm font-semibold text-red-500 dark:text-red-700'>
+                    {errors.collegeSlug.message}
+                  </div>
                 ) : null}
               </div>
             </div>

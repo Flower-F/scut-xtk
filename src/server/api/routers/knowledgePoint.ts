@@ -112,12 +112,12 @@ export const knowledgePointRouter = createTRPCRouter({
       z.object({
         name: z.string().nonempty('知识点名称不得为空'),
         label: z.string().optional(),
-        id: z.string().nonempty('知识点id不得为空'),
+        knowledgePointId: z.string().nonempty('知识点id不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { name, label, id } = input;
+        const { name, label, knowledgePointId } = input;
 
         await ctx.prisma.knowledgePoint.update({
           data: {
@@ -125,7 +125,7 @@ export const knowledgePointRouter = createTRPCRouter({
             label,
           },
           where: {
-            id,
+            id: knowledgePointId,
           },
         });
       } catch (error) {
@@ -137,14 +137,14 @@ export const knowledgePointRouter = createTRPCRouter({
     }),
 
   deleteKnowledgePoint: protectedProcedure
-    .input(z.object({ id: z.string().nonempty('知识点id不得为空') }))
+    .input(z.object({ knowledgePointId: z.string().nonempty('知识点id不得为空') }))
     .mutation(async ({ ctx, input }) => {
-      const { id } = input;
+      const { knowledgePointId } = input;
 
       try {
         await ctx.prisma.knowledgePoint.delete({
           where: {
-            id,
+            id: knowledgePointId,
           },
         });
       } catch (error) {

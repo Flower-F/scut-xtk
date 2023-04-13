@@ -97,12 +97,12 @@ export const exerciseRouter = createTRPCRouter({
         question: z.string().nonempty('题目内容不得为空'),
         answer: z.string().nonempty('题目答案不得为空'),
         analysis: z.string().optional(),
-        id: z.string().nonempty('习题id不得为空'),
+        exerciseId: z.string().nonempty('习题id不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { type, difficulty, question, answer, id, analysis } = input;
+        const { type, difficulty, question, answer, exerciseId, analysis } = input;
 
         await ctx.prisma.exercise.update({
           data: {
@@ -113,7 +113,7 @@ export const exerciseRouter = createTRPCRouter({
             analysis,
           },
           where: {
-            id,
+            id: exerciseId,
           },
         });
       } catch (error) {
@@ -125,65 +125,139 @@ export const exerciseRouter = createTRPCRouter({
     }),
 
   deleteExercise: protectedProcedure
-    .input(z.object({ id: z.string().nonempty('习题id不能为空') }))
+    .input(z.object({ exerciseId: z.string().nonempty('习题id不能为空') }))
     .mutation(async ({ ctx, input }) => {
-      const { id } = input;
-      await ctx.prisma.exercise.delete({
-        where: {
-          id,
-        },
-      });
+      const { exerciseId } = input;
+
+      try {
+        await ctx.prisma.exercise.delete({
+          where: {
+            id: exerciseId,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
     }),
 
   getExerciseList: protectedProcedure
     .input(
       z.object({
-        knowledgePointId: z.string(),
+        knowledgePointId: z.string().nonempty('知识点id不得为空'),
         cursor: z.string().nullish(),
-        limit: z.number(),
+        limit: z.number({
+          invalid_type_error: '请输入分页的数据大小',
+        }),
       })
     )
     .query(async ({ ctx, input }) => {
       const { knowledgePointId, cursor, limit } = input;
 
-      const exerciseList = await ctx.prisma.exercise.findMany({
-        select: {
-          id: true,
-          type: true,
-          difficulty: true,
-          question: true,
-          answer: true,
-          analysis: true,
-          options: {
-            select: {
-              id: true,
-              content: true,
+      try {
+        const exerciseList = await ctx.prisma.exercise.findMany({
+          select: {
+            id: true,
+            type: true,
+            difficulty: true,
+            question: true,
+            answer: true,
+            analysis: true,
+            options: {
+              select: {
+                id: true,
+                content: true,
+              },
             },
-          },
-          user: {
-            select: {
-              id: true,
-              name: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
             },
+            updatedAt: true,
           },
-          updatedAt: true,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: limit + 1,
-        where: {
-          knowledgePointId,
-        },
-        cursor: cursor ? { id: cursor } : undefined,
-      });
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: limit + 1,
+          where: {
+            knowledgePointId,
+          },
+          cursor: cursor ? { id: cursor } : undefined,
+        });
 
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (exerciseList.length > limit) {
-        const nextItem = exerciseList.pop();
-        if (nextItem) nextCursor = nextItem.id;
+        let nextCursor: typeof cursor | undefined = undefined;
+        if (exerciseList.length > limit) {
+          const nextItem = exerciseList.pop();
+          if (nextItem) nextCursor = nextItem.id;
+        }
+
+        return { exerciseList, nextCursor };
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
       }
+    }),
 
-      return { exerciseList, nextCursor };
+  getExercise: protectedProcedure
+    .input(
+      z.object({
+        exerciseId: z.string().nonempty('知识点id不得为空'),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { exerciseId } = input;
+
+      try {
+        const result = await ctx.prisma.exercise.findFirst({
+          where: {
+            id: exerciseId,
+          },
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                college: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+            id: true,
+            question: true,
+            answer: true,
+            analysis: true,
+            options: {
+              select: {
+                id: true,
+                content: true,
+              },
+            },
+            type: true,
+            difficulty: true,
+            updatedAt: true,
+            knowledgePoint: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        });
+
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
     }),
 });

@@ -71,13 +71,13 @@ export function EditCourseDialog({ name, courseId }: EditCourseDialogProps) {
   async function onUpdateCourse(input: Omit<UpdateCourseInput, 'id'>) {
     await updateCourse.mutateAsync({
       ...input,
-      id: courseId,
+      courseId,
     });
   }
 
   async function onDeleteCourse() {
     await deleteCourse.mutateAsync({
-      id: courseId,
+      courseId,
     });
   }
 

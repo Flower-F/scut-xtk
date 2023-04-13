@@ -30,7 +30,7 @@ export default function CollegePage() {
           {getCollegeList.data?.length
             ? getCollegeList.data.map((item) =>
                 sessionData?.user.role === 'ADMIN' ? (
-                  <EditCollegeDialog key={item.id} collegeId={item.id} name={item.name} slug={item.slug} />
+                  <EditCollegeDialog key={item.id} collegeId={item.id} name={item.name} collegeSlug={item.slug} />
                 ) : (
                   <ListItem key={item.id} title={item.name} href={`/college/${item.slug}`} />
                 )

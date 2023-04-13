@@ -27,15 +27,15 @@ export const collegeRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().nonempty('学院名称不得为空'),
-        slug: z.string().nonempty('学院标识不得为空'),
+        collegeSlug: z.string().nonempty('学院标识不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, slug } = input;
+      const { name, collegeSlug } = input;
 
       const college = await ctx.prisma.college.findFirst({
         where: {
-          slug,
+          slug: collegeSlug,
         },
       });
 
@@ -50,7 +50,7 @@ export const collegeRouter = createTRPCRouter({
         await ctx.prisma.college.create({
           data: {
             name,
-            slug,
+            slug: collegeSlug,
           },
         });
       } catch (error) {
@@ -64,22 +64,22 @@ export const collegeRouter = createTRPCRouter({
   updateCollege: adminProcedure
     .input(
       z.object({
-        id: z.string().nonempty('学院id不得为空'),
+        collegeId: z.string().nonempty('学院id不得为空'),
         name: z.string().nonempty('学院名称不得为空'),
-        slug: z.string().nonempty('学院标识不得为空'),
+        collegeSlug: z.string().nonempty('学院标识不得为空'),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, slug, id } = input;
+      const { name, collegeSlug, collegeId } = input;
 
       try {
         await ctx.prisma.college.update({
           data: {
             name,
-            slug,
+            slug: collegeSlug,
           },
           where: {
-            id,
+            id: collegeId,
           },
         });
       } catch (error) {
@@ -91,14 +91,14 @@ export const collegeRouter = createTRPCRouter({
     }),
 
   deleteCollege: adminProcedure
-    .input(z.object({ id: z.string().nonempty('学院id不得为空') }))
+    .input(z.object({ collegeId: z.string().nonempty('学院id不得为空') }))
     .mutation(async ({ ctx, input }) => {
-      const { id } = input;
+      const { collegeId } = input;
 
       try {
         await ctx.prisma.college.delete({
           where: {
-            id,
+            id: collegeId,
           },
         });
       } catch (error) {

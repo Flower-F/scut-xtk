@@ -80,13 +80,13 @@ export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePoin
   async function onUpdateKnowledgePoint(input: Omit<UpdateKnowledgePointInput, 'id'>) {
     await updateKnowledgePoint.mutateAsync({
       ...input,
-      id: knowledgePointId,
+      knowledgePointId,
     });
   }
 
   async function onDeleteKnowledgePoint() {
     await deleteKnowledgePoint.mutateAsync({
-      id: knowledgePointId,
+      knowledgePointId,
     });
   }
 
