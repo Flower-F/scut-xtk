@@ -28,10 +28,10 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
       <div className='flex flex-wrap items-end justify-between space-y-2 border-b pb-2'>
         <div className='flex items-center space-x-2'>
           <div className='flex shrink-0 select-none items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-700 hover:text-slate-50'>
-            题目类型：{exerciseTypeWithoutAllMapping[exercise.type]}
+            题目难度：{difficultyWithoutAllMapping[exercise.difficulty]}
           </div>
           <div className='flex shrink-0 select-none items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-700 hover:text-slate-50'>
-            题目难度：{difficultyWithoutAllMapping[exercise.difficulty]}
+            题目类型：{exerciseTypeWithoutAllMapping[exercise.type]}
           </div>
         </div>
         <div className='text-sm text-slate-700 dark:text-slate-400'>
@@ -57,17 +57,19 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
 
       <Collapsible open={isOpened} onOpenChange={setIsOpened} className={`relative ${isOpened ? 'pb-16' : ''}`}>
         <CollapsibleContent forceMount className={cn('overflow-hidden', !isOpened && 'max-h-16')}>
-          <div>
-            <div className='text-lg font-semibold'>答案：</div>
-            <p>{exercise.answer}</p>
-          </div>
-
-          {exercise.analysis ? (
+          <div className='space-y-4'>
             <div>
-              <div className='text-lg font-semibold'>解析：</div>
-              <p>{exercise.analysis}</p>
+              <div className='text-lg font-semibold'>答案：</div>
+              <p>{exercise.answer}</p>
             </div>
-          ) : null}
+
+            {exercise.analysis ? (
+              <div>
+                <div className='text-lg font-semibold'>解析：</div>
+                <p>{exercise.analysis}</p>
+              </div>
+            ) : null}
+          </div>
         </CollapsibleContent>
 
         <div

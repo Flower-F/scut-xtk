@@ -24,10 +24,10 @@ export default function ExerciseDetailPage() {
       <div className='flex flex-wrap items-end justify-between space-y-2 border-b pb-2'>
         <div className='flex items-center space-x-2'>
           <div className='flex shrink-0 select-none items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-700 hover:text-slate-50'>
-            题目类型：{exerciseTypeWithoutAllMapping[exercise.type]}
+            题目难度：{difficultyWithoutAllMapping[exercise.difficulty]}
           </div>
           <div className='flex shrink-0 select-none items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-700 hover:text-slate-50'>
-            题目难度：{difficultyWithoutAllMapping[exercise.difficulty]}
+            题目类型：{exerciseTypeWithoutAllMapping[exercise.type]}
           </div>
         </div>
         <div className='text-sm text-slate-700 dark:text-slate-400'>

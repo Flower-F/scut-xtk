@@ -1,5 +1,6 @@
 import { type ReactElement } from 'react';
 import Head from 'next/head';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { DifficultyType, ExerciseType } from '@prisma/client';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -17,10 +18,39 @@ import { api } from '~/utils/api';
 
 const LIMIT = 10;
 
+function standardDifficulty(difficulty: string | null): DifficultyType | undefined {
+  if (!difficulty) {
+    return undefined;
+  }
+
+  if (Object.values(DifficultyType).some((a) => difficulty === a)) {
+    return difficulty as DifficultyType;
+  }
+
+  return 'ANY';
+}
+
+function standardType(type: string | null): ExerciseType | undefined {
+  if (!type) {
+    return undefined;
+  }
+
+  if (Object.values(ExerciseType).some((a) => type === a)) {
+    return type as ExerciseType;
+  }
+
+  return 'ALL_QUESTION';
+}
+
 export default function KnowledgePointDetailPage() {
   const router = useRouter();
   const knowledgePointId = router.query.kid && typeof router.query.kid === 'string' ? router.query.kid : '';
   const collegeSlug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+
+  const searchParams = useSearchParams();
+  const difficulty = standardDifficulty(searchParams.get('difficulty'));
+  const type = standardType(searchParams.get('type'));
+  const keyword = searchParams.get('keyword');
 
   const knowledgePoint = api.knowledgePoint.getKnowledgePointById.useQuery(
     { knowledgePointId },
@@ -35,6 +65,9 @@ export default function KnowledgePointDetailPage() {
     {
       limit: LIMIT,
       knowledgePointId,
+      keyword,
+      type,
+      difficulty,
     },
     {
       enabled: !!router.query.kid,
@@ -61,45 +94,57 @@ export default function KnowledgePointDetailPage() {
           </div>
         </div>
 
-        <div className='flex flex-col space-y-4'>
+        <form className='flex flex-col space-y-4'>
+          {difficulty ? (
+            <div className='flex items-center'>
+              <div className='shrink-0'>题目难度：</div>
+              <RadioGroup defaultValue={difficulty} name='difficulty' className='flex flex-row flex-wrap items-center'>
+                {(Object.keys(DifficultyType) as Array<keyof typeof DifficultyType>).map((key) => (
+                  <div className='flex items-center space-x-2' key={key}>
+                    <RadioGroupItem value={DifficultyType[key]} id={DifficultyType[key]} />
+                    <Label htmlFor={DifficultyType[key]}>{difficultyTypeMapping[DifficultyType[key]]}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          ) : null}
+
+          {type ? (
+            <div className='flex items-center'>
+              <div className='shrink-0'>题目类型：</div>
+              <RadioGroup defaultValue={type} name='type' className='flex flex-row flex-wrap items-center'>
+                {(Object.keys(ExerciseType) as Array<keyof typeof ExerciseType>).map((key) => (
+                  <div className='flex items-center space-x-2' key={key}>
+                    <RadioGroupItem value={ExerciseType[key]} id={ExerciseType[key]} />
+                    <Label htmlFor={ExerciseType[key]}>{exerciseTypeMapping[ExerciseType[key]]}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          ) : null}
+
           <div className='flex w-full items-center space-x-4'>
-            <Input type='text' className='w-full' />
-            <Button className='shrink-0'>查找题目</Button>
+            <Input
+              type='search'
+              name='keyword'
+              className='w-full'
+              placeholder='请输入题目的关键词（知识点、题目、答案等）'
+              defaultValue={keyword || ''}
+            />
+            <Button className='shrink-0' type='submit'>
+              查找题目
+            </Button>
           </div>
-
-          <div className='flex items-center'>
-            <div className='shrink-0'>题目难度：</div>
-            <RadioGroup defaultValue={DifficultyType.ANY} className='flex flex-row flex-wrap items-center'>
-              {(Object.keys(DifficultyType) as Array<keyof typeof DifficultyType>).map((key) => (
-                <div className='flex items-center space-x-2' key={key}>
-                  <RadioGroupItem value={DifficultyType[key]} id={DifficultyType[key]} />
-                  <Label htmlFor={DifficultyType[key]}>{difficultyTypeMapping[DifficultyType[key]]}</Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
-
-          <div className='flex items-center'>
-            <div className='shrink-0'>题目类型：</div>
-            <RadioGroup defaultValue={ExerciseType.ALL_QUESTION} className='flex flex-row flex-wrap items-center'>
-              {(Object.keys(ExerciseType) as Array<keyof typeof ExerciseType>).map((key) => (
-                <div className='flex items-center space-x-2' key={key}>
-                  <RadioGroupItem value={ExerciseType[key]} id={ExerciseType[key]} />
-                  <Label htmlFor={ExerciseType[key]}>{exerciseTypeMapping[ExerciseType[key]]}</Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
-        </div>
+        </form>
 
         <InfiniteScroll
           dataLength={getExerciseList.data?.pages.flatMap((page) => page.exerciseList).length ?? 0}
           next={getExerciseList.fetchNextPage}
           hasMore={Boolean(getExerciseList.hasNextPage)}
-          loader={<div className='text-center font-bold'>试题加载中...</div>}
-          endMessage={<div className='text-center font-bold'>暂无其他题目</div>}
+          loader={<div className='pb-6 text-center font-bold'>试题加载中...</div>}
+          endMessage={<div className='pb-6 text-center font-bold'>暂无其他题目</div>}
         >
-          <ul className='my-6 space-y-6'>
+          <ul className='space-y-6 py-6'>
             {getExerciseList.isSuccess &&
               getExerciseList.data.pages
                 .flatMap((page) => page.exerciseList)

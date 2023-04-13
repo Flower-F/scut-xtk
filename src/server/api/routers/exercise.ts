@@ -151,10 +151,21 @@ export const exerciseRouter = createTRPCRouter({
         limit: z.number({
           invalid_type_error: '请输入分页的数据大小',
         }),
+        type: z
+          .nativeEnum(ExerciseType, {
+            invalid_type_error: '题目类型只能为填空、选择和大题',
+          })
+          .optional(),
+        difficulty: z
+          .nativeEnum(DifficultyType, {
+            invalid_type_error: '题目难度只能为简单、中等和困难',
+          })
+          .optional(),
+        keyword: z.string().nullish(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { knowledgePointId, cursor, limit } = input;
+      const { knowledgePointId, cursor, limit, type = 'ALL_QUESTION', difficulty = 'ANY', keyword } = input;
 
       try {
         const exerciseList = await ctx.prisma.exercise.findMany({
@@ -185,6 +196,27 @@ export const exerciseRouter = createTRPCRouter({
           take: limit + 1,
           where: {
             knowledgePointId,
+            type: type !== 'ALL_QUESTION' ? type : undefined,
+            difficulty: difficulty !== 'ANY' ? difficulty : undefined,
+            OR: [
+              {
+                question: {
+                  contains: keyword !== null ? keyword : undefined,
+                },
+              },
+              {
+                answer: {
+                  contains: keyword !== null ? keyword : undefined,
+                },
+              },
+              {
+                knowledgePoint: {
+                  name: {
+                    contains: keyword !== null ? keyword : undefined,
+                  },
+                },
+              },
+            ],
           },
           cursor: cursor ? { id: cursor } : undefined,
         });
