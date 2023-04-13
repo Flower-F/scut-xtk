@@ -12,9 +12,9 @@ interface SidebarLayoutProps {
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
   const router = useRouter();
-  const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+  const collegeSlug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
   const sidebarNavItems = api.knowledgePoint.getSidebarNavItems.useQuery(
-    { collegeSlug: slug },
+    { collegeSlug },
     {
       enabled: !!router.query.slug,
     }

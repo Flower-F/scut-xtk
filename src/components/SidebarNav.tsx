@@ -14,18 +14,27 @@ interface SidebarNavProps {
 export function SidebarNav({ items }: SidebarNavProps) {
   const router = useRouter();
   const knowledgePointId = router.query.kid && typeof router.query.kid === 'string' ? router.query.kid : '';
+  const exerciseId = router.query.eid && typeof router.query.eid === 'string' ? router.query.eid : '';
 
   return items?.length ? (
     <div className='w-full'>
       {items.map((college) => (
         <div key={college.id} className='pb-6'>
-          {knowledgePointId ? (
+          {exerciseId ? (
+            <Link
+              href={`/college/${college.slug || ''}/${knowledgePointId}`}
+              className='mb-2 flex w-full items-center text-lg hover:underline'
+            >
+              <Icons.ChevronLeft className='mr-2 h-6 w-6' />
+              返回知识点
+            </Link>
+          ) : knowledgePointId ? (
             <Link
               href={`/college/${college.slug || ''}`}
               className='mb-2 flex w-full items-center text-lg hover:underline'
             >
               <Icons.ChevronLeft className='mr-2 h-6 w-6' />
-              管理课程
+              返回课程管理
             </Link>
           ) : null}
 

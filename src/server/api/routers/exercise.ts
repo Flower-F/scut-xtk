@@ -242,6 +242,7 @@ export const exerciseRouter = createTRPCRouter({
             },
             type: true,
             difficulty: true,
+            createdAt: true,
             updatedAt: true,
             knowledgePoint: {
               select: {

@@ -43,7 +43,7 @@ export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePoin
     resolver: zodResolver(updateKnowledgePointInputSchema),
   });
   const router = useRouter();
-  const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+  const collegeSlug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
 
   const knowledgePoint = api.knowledgePoint.getKnowledgePointById.useQuery(
     { knowledgePointId },
@@ -70,7 +70,7 @@ export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePoin
       await knowledgePointContext.invalidate();
       reset();
       setOpenDialog(false);
-      await router.push(`/college/${slug}`);
+      await router.push(`/college/${collegeSlug}`);
     },
     onError: (err) => {
       setError(err.message);

@@ -103,12 +103,12 @@ export function EditCollegeDialog({ name, collegeId, collegeSlug }: EditCollegeD
                 ) : null}
               </div>
               <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='slug'>学院标识</Label>
+                <Label htmlFor='collegeSlug'>学院标识</Label>
                 <Controller
                   name='collegeSlug'
                   control={control}
                   defaultValue={collegeSlug || ''}
-                  render={({ field }) => <Input type='text' id='slug' placeholder='请输入学院标识' {...field} />}
+                  render={({ field }) => <Input type='text' id='collegeSlug' placeholder='请输入学院标识' {...field} />}
                 />
                 {errors.collegeSlug ? (
                   <div className='text-sm font-semibold text-red-500 dark:text-red-700'>

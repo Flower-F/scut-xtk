@@ -9,10 +9,10 @@ import { api } from '~/utils/api';
 
 export default function CollegeDetailPage() {
   const router = useRouter();
-  const slug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
+  const collegeSlug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
 
-  const collegeName = api.college.getCollegeBySlug.useQuery({ collegeSlug: slug }).data?.name || '学院课程';
-  const courseList = api.course.getCourseList.useQuery({ collegeSlug: slug }).data;
+  const collegeName = api.college.getCollegeBySlug.useQuery({ collegeSlug }).data?.name || '学院课程';
+  const courseList = api.course.getCourseList.useQuery({ collegeSlug }).data;
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function CollegeDetailPage() {
           {courseList?.length
             ? courseList.map((item) => <EditCourseDialog key={item.id} courseId={item.id} name={item.name} />)
             : null}
-          <CreateCourseDialog collegeSlug={slug} />
+          <CreateCourseDialog collegeSlug={collegeSlug} />
         </ul>
       </div>
     </>
