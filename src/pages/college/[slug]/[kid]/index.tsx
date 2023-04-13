@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { DifficultyType, ExerciseType } from '@prisma/client';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
@@ -20,6 +22,9 @@ import {
 } from '~/constants/mapping';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/common';
+import 'dayjs/locale/zh-cn';
+
+dayjs.extend(relativeTime);
 
 const LIMIT = 10;
 
@@ -111,10 +116,24 @@ export default function KnowledgePointDetailPage() {
               .map((exercise, index) => {
                 return (
                   <ListItem key={index} href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}>
-                    <div>{exerciseTypeWithoutAllMapping[exercise.type]}</div>
-                    <div>{difficultyWithoutAllMapping[exercise.difficulty]}</div>
-                    <div>{exercise.question}</div>
-                    <div>{exercise.answer}</div>
+                    <p>{exerciseTypeWithoutAllMapping[exercise.type]}</p>
+                    <p>{difficultyWithoutAllMapping[exercise.difficulty]}</p>
+                    <p>{exercise.question}</p>
+
+                    {exercise.options.length > 0 ? (
+                      <ul>
+                        {exercise.options.map((option, index) => (
+                          <li key={option.id}>
+                            <div>{String.fromCharCode(String(index + 1).charCodeAt(0) + 16)}.</div>
+                            <div>{option.content}</div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+
+                    <p>{exercise.answer}</p>
+                    <p>{exercise.analysis}</p>
+                    <span>{dayjs(exercise.updatedAt).locale('zh-cn').fromNow()}</span>
                   </ListItem>
                 );
               })}

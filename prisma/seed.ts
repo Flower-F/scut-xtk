@@ -1,14 +1,13 @@
 import { faker } from '@faker-js/faker/locale/zh_CN';
-import { PrismaClient, type DifficultyType, type ExerciseType } from '@prisma/client';
-import random from 'lodash.random';
+import { DifficultyType, ExerciseType, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 const EXERCISE_AMOUNT = 60;
 
 async function run() {
-  const exerciseList = new Array(EXERCISE_AMOUNT).fill(null).map(() => {
-    const randomExerciseNumber = random(1, 3);
+  const exerciseListData = new Array(EXERCISE_AMOUNT).fill(null).map(() => {
+    const randomExerciseNumber = faker.datatype.number({ min: 1, max: Object.keys(ExerciseType).length - 1 });
 
     let type: ExerciseType = 'COMPLETION_QUESTION';
     if (randomExerciseNumber === 1) {
@@ -19,7 +18,7 @@ async function run() {
       type = 'BIG_QUESTION';
     }
 
-    const randomDifficultyNumber = random(1, 3);
+    const randomDifficultyNumber = faker.datatype.number({ min: 1, max: Object.keys(DifficultyType).length - 1 });
     let difficulty: DifficultyType = 'EASY';
     if (randomDifficultyNumber === 1) {
       difficulty = 'EASY';
@@ -29,14 +28,14 @@ async function run() {
       difficulty = 'HARD';
     }
 
-    const hasAnalysis = random(0, 1);
+    const hasAnalysis = faker.datatype.number({ min: 0, max: 1 });
 
     return {
       type,
       difficulty,
-      question: faker.lorem.sentence(random(1, 4)),
-      answer: faker.lorem.paragraph(random(1, 8)),
-      analysis: hasAnalysis ? faker.lorem.paragraph(random(1, 4)) : null,
+      question: faker.lorem.sentence(faker.datatype.number({ min: 1, max: 4 })),
+      answer: faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 8 })),
+      analysis: hasAnalysis ? faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 4 })) : null,
       knowledgePoint: {
         connect: {
           id: 'clgc3zpyf0002sphsnllscdvb',
@@ -50,13 +49,36 @@ async function run() {
     };
   });
 
-  const createExerciseList = exerciseList.map((exercise) => {
+  const createExerciseList = exerciseListData.map((exercise) => {
     return prisma.exercise.create({
       data: exercise,
     });
   });
 
-  await prisma.$transaction(createExerciseList);
+  const exerciseList = await prisma.$transaction(createExerciseList);
+
+  for (const exercise of exerciseList) {
+    if (exercise.type !== 'CHOICE_QUESTION') {
+      continue;
+    }
+
+    const options = [];
+    const optionLength = faker.datatype.number({ min: 1, max: 5 });
+    for (let i = 0; i < optionLength; i++) {
+      options.push({
+        content: faker.lorem.sentence(),
+        exercise: {
+          connect: {
+            id: exercise.id,
+          },
+        },
+      });
+
+      const createOptions = options.map((option) => prisma.option.create({ data: option }));
+      await prisma.$transaction(createOptions);
+    }
+  }
+
   await prisma.$disconnect();
 }
 

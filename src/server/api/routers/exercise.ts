@@ -153,11 +153,20 @@ export const exerciseRouter = createTRPCRouter({
           difficulty: true,
           question: true,
           answer: true,
+          analysis: true,
           options: {
             select: {
+              id: true,
               content: true,
             },
           },
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          updatedAt: true,
         },
         orderBy: {
           createdAt: 'desc',
