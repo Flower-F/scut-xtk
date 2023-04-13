@@ -1,9 +1,9 @@
-import { type ReactElement } from 'react';
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef, type ReactElement } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { DifficultyType, ExerciseType } from '@prisma/client';
-
-// import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
 import { CreateExerciseDialog } from '~/components/CreateExerciseDialog';
@@ -12,14 +12,21 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/RadioGroup';
-import { difficultyTypeMapping, exerciseTypeMapping } from '~/constants/mapping';
+import {
+  difficultyTypeMapping,
+  difficultyWithoutAllMapping,
+  exerciseTypeMapping,
+  exerciseTypeWithoutAllMapping,
+} from '~/constants/mapping';
 import { api } from '~/utils/api';
+import { cn } from '~/utils/common';
 
 const LIMIT = 10;
 
-export default function ExercisePage() {
+export default function KnowledgePointDetailPage() {
   const router = useRouter();
   const knowledgePointId = router.query.kid && typeof router.query.kid === 'string' ? router.query.kid : '';
+  const collegeSlug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
 
   const knowledgePoint = api.knowledgePoint.getKnowledgePointById.useQuery(
     { knowledgePointId },
@@ -30,12 +37,16 @@ export default function ExercisePage() {
 
   const knowledgePointName = knowledgePoint?.name || '知识点习题';
 
-  const exerciseList = api.exercise.getExerciseList.useInfiniteQuery({
-    limit: LIMIT,
-    knowledgePointId,
-  }).data;
-
-  console.log('exerciseList: ', exerciseList);
+  const getExerciseList = api.exercise.getExerciseList.useInfiniteQuery(
+    {
+      limit: LIMIT,
+      knowledgePointId,
+    },
+    {
+      enabled: !!router.query.kid,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
 
   return (
     <>
@@ -86,11 +97,58 @@ export default function ExercisePage() {
             </RadioGroup>
           </div>
         </div>
+
+        <InfiniteScroll
+          dataLength={getExerciseList.data?.pages.flatMap((page) => page.exerciseList).length ?? 0}
+          next={getExerciseList.fetchNextPage}
+          hasMore={Boolean(getExerciseList.hasNextPage)}
+          loader={<h4>Loading...</h4>}
+          endMessage={<p className='text-center font-bold'>已经到底了</p>}
+        >
+          {getExerciseList.isSuccess &&
+            getExerciseList.data.pages
+              .flatMap((page) => page.exerciseList)
+              .map((exercise, index) => {
+                return (
+                  <ListItem key={index} href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}>
+                    <div>{exerciseTypeWithoutAllMapping[exercise.type]}</div>
+                    <div>{difficultyWithoutAllMapping[exercise.difficulty]}</div>
+                    <div>{exercise.question}</div>
+                    <div>{exercise.answer}</div>
+                  </ListItem>
+                );
+              })}
+        </InfiniteScroll>
       </div>
     </>
   );
 }
 
-ExercisePage.getLayout = function getLayout(page: ReactElement) {
+const ListItem = forwardRef<ElementRef<typeof Link>, ComponentPropsWithoutRef<typeof Link>>(
+  ({ className, title, children, href, ...props }, ref) => {
+    return (
+      <li>
+        <Link
+          href={href}
+          ref={ref}
+          legacyBehavior
+          {...props}
+          className={cn(
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-slate-100 focus:bg-slate-100 dark:hover:bg-slate-700 dark:focus:bg-slate-700',
+            className
+          )}
+        >
+          <div>
+            <div className='text-sm font-medium leading-none'>{title}</div>
+            {children}
+          </div>
+        </Link>
+      </li>
+    );
+  }
+);
+ListItem.displayName = 'ListItem';
+
+KnowledgePointDetailPage.getLayout = function getLayout(page: ReactElement) {
   return <SidebarLayout>{page}</SidebarLayout>;
 };

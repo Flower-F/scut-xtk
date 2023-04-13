@@ -25,8 +25,9 @@ export function MainNav({ items }: MainNavProps) {
     <div className='hidden md:flex'>
       <Link href='/' className='mr-6 flex items-center space-x-2'>
         <Icons.Logo className='h-6 w-6' />
-        <span className='hidden font-bold sm:inline-block'>shadcn/ui</span>
+        <span className='hidden font-semibold sm:inline-block'>华南理工大学习题库</span>
       </Link>
+
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

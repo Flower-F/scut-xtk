@@ -23,6 +23,21 @@ export const exerciseRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { type, difficulty, question, answer, knowledgePointId, analysis, options } = input;
+      const user = ctx.session.user;
+
+      if (type === 'ALL_QUESTION') {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: '题目类型只能为填空、选择和大题',
+        });
+      }
+
+      if (difficulty === 'ANY') {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: '题目难度只能为简单、中等和困难',
+        });
+      }
 
       try {
         const exercise = await ctx.prisma.exercise.create({
@@ -35,6 +50,11 @@ export const exerciseRouter = createTRPCRouter({
             knowledgePoint: {
               connect: {
                 id: knowledgePointId,
+              },
+            },
+            user: {
+              connect: {
+                id: user.id,
               },
             },
           },
