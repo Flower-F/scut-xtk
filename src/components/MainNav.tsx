@@ -31,36 +31,6 @@ export function MainNav({ items }: MainNavProps) {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className='h-9'>Getting started</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
-                <li className='row-span-3'>
-                  <Link href='/' passHref legacyBehavior>
-                    <NavigationMenuLink
-                      className='flex h-full w-full select-none flex-col justify-end
-                      space-y-2 rounded-md bg-gradient-to-b from-rose-500 to-indigo-700 p-6 no-underline
-                      outline-none focus:shadow-md'
-                    >
-                      <div className='text-lg font-medium text-white'>shadcn/ui</div>
-                      <p className='text-sm leading-snug text-white/90'>
-                        Beautifully designed components built with Radix UI and Tailwind CSS.
-                      </p>
-                    </NavigationMenuLink>
-                  </Link>
-                </li>
-                <ListItem href='/docs' title='Introduction'>
-                  Re-usable components built using Radix UI and Tailwind CSS.
-                </ListItem>
-                <ListItem href='/docs/installation' title='Installation'>
-                  How to install dependencies and structure your app.
-                </ListItem>
-                <ListItem href='/docs/primitives/typography' title='Typography'>
-                  Styles for headings, paragraphs, lists...etc
-                </ListItem>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
             <NavigationMenuTrigger className='h-9'>选择学院</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className='grid w-[600px] grid-cols-2 gap-3 p-4'>
@@ -83,13 +53,13 @@ export function MainNav({ items }: MainNavProps) {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem className='hidden lg:flex'>
-            <Link href='/figma' legacyBehavior passHref>
-              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>Figma</NavigationMenuLink>
+            <Link href='https://www.scut.edu.cn/new/' legacyBehavior passHref>
+              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>学校官网</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem className='hidden lg:flex'>
-            <Link href='https://github.com/shadcn/ui' legacyBehavior passHref>
-              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>GitHub</NavigationMenuLink>
+            <Link href='https://jw.scut.edu.cn/' legacyBehavior passHref>
+              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>教务处</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>

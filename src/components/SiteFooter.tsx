@@ -7,24 +7,6 @@ export function SiteFooter() {
             <div>相关链接</div>
 
             <a
-              href='https://www.scut.edu.cn/'
-              target='_blank'
-              rel='noreferrer'
-              className='font-medium underline underline-offset-4'
-            >
-              学校官网
-            </a>
-
-            <a
-              href='http://jw.scut.edu.cn/'
-              target='_blank'
-              rel='noreferrer'
-              className='font-medium underline underline-offset-4'
-            >
-              教务处
-            </a>
-
-            <a
               href='http://eonline.jw.scut.edu.cn/'
               target='_blank'
               rel='noreferrer'

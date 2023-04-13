@@ -97,7 +97,7 @@ export default function KnowledgePointDetailPage() {
           next={getExerciseList.fetchNextPage}
           hasMore={Boolean(getExerciseList.hasNextPage)}
           loader={<h4>试题加载中...</h4>}
-          endMessage={<div className='text-center font-bold'>已经到底了</div>}
+          endMessage={<div className='text-center font-bold'>暂无其他题目</div>}
         >
           <ul className='my-6 space-y-6'>
             {getExerciseList.isSuccess &&

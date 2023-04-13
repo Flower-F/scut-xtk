@@ -76,6 +76,11 @@ export const userRouter = createTRPCRouter({
           },
         },
       },
+      where: {
+        NOT: {
+          id: ctx.session.user.id,
+        },
+      },
     });
 
     return result;
