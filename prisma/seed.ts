@@ -73,10 +73,10 @@ async function run() {
           },
         },
       });
-
-      const createOptions = options.map((option) => prisma.option.create({ data: option }));
-      await prisma.$transaction(createOptions);
     }
+
+    const createOptions = options.map((option) => prisma.option.create({ data: option }));
+    await prisma.$transaction(createOptions);
   }
 
   await prisma.$disconnect();

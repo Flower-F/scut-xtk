@@ -96,7 +96,7 @@ model Option {
   id      String @id @default(cuid())
   content String
 
-  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   exerciseId String?
 
   createdAt DateTime @default(now())

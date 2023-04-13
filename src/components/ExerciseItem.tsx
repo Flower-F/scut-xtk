@@ -37,15 +37,15 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
         </div>
 
         <div>
-          <div>题目：</div>
+          <div className='font-semibold'>题目：</div>
           <p>{exercise.question}</p>
         </div>
 
         {exercise.options.length > 0 ? (
           <ul>
             {exercise.options.map((option, index) => (
-              <li key={option.id} className='flex items-center'>
-                <div>{String.fromCharCode(String(index + 1).charCodeAt(0) + 16)}.&nbsp;</div>
+              <li key={option.id} className='flex items-start'>
+                <div className='mr-1'>{String.fromCharCode(String(index + 1).charCodeAt(0) + 16)}.</div>
                 <div>{option.content}</div>
               </li>
             ))}
@@ -53,13 +53,13 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
         ) : null}
 
         <div>
-          <div>答案：</div>
+          <div className='font-semibold'>答案：</div>
           <p>{exercise.answer}</p>
         </div>
 
         {exercise.analysis ? (
           <div>
-            <div>解析：</div>
+            <div className='font-semibold'>解析：</div>
             <p>{exercise.analysis}</p>
           </div>
         ) : null}
