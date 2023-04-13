@@ -20,7 +20,7 @@ const LIMIT = 10;
 
 function standardDifficulty(difficulty: string | null): DifficultyType | undefined {
   if (!difficulty) {
-    return undefined;
+    return 'ANY';
   }
 
   if (Object.values(DifficultyType).some((a) => difficulty === a)) {
@@ -32,7 +32,7 @@ function standardDifficulty(difficulty: string | null): DifficultyType | undefin
 
 function standardType(type: string | null): ExerciseType | undefined {
   if (!type) {
-    return undefined;
+    return 'ALL_QUESTION';
   }
 
   if (Object.values(ExerciseType).some((a) => type === a)) {
@@ -89,13 +89,17 @@ export default function KnowledgePointDetailPage() {
           </h3>
 
           <div className='flex items-center space-x-3'>
-            <EditKnowledgePointDialog knowledgePointId={knowledgePointId} />
+            <EditKnowledgePointDialog
+              knowledgePointId={knowledgePointId}
+              name={knowledgePoint?.name || ''}
+              label={knowledgePoint?.label || ''}
+            />
             <CreateExerciseDialog knowledgePointId={knowledgePointId} />
           </div>
         </div>
 
         <form className='flex flex-col space-y-4'>
-          {difficulty ? (
+          {router.isReady ? (
             <div className='flex items-center'>
               <div className='shrink-0'>题目难度：</div>
               <RadioGroup defaultValue={difficulty} name='difficulty' className='flex flex-row flex-wrap items-center'>
@@ -109,7 +113,7 @@ export default function KnowledgePointDetailPage() {
             </div>
           ) : null}
 
-          {type ? (
+          {router.isReady ? (
             <div className='flex items-center'>
               <div className='shrink-0'>题目类型：</div>
               <RadioGroup defaultValue={type} name='type' className='flex flex-row flex-wrap items-center'>

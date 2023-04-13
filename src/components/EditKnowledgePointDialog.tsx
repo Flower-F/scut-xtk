@@ -5,7 +5,10 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { type z } from 'zod';
 
-import { createKnowledgePointInputSchema } from '~/components/CreateKnowledgePointDialog';
+import {
+  createKnowledgePointInputSchema,
+  type CreateKnowledgePointInput,
+} from '~/components/CreateKnowledgePointDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,11 +29,11 @@ import { api } from '~/utils/api';
 const updateKnowledgePointInputSchema = createKnowledgePointInputSchema;
 type UpdateKnowledgePointInput = z.TypeOf<typeof updateKnowledgePointInputSchema>;
 
-interface EditKnowledgePointDialogProps {
+interface EditKnowledgePointDialogProps extends CreateKnowledgePointInput {
   knowledgePointId: string;
 }
 
-export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePointDialogProps) {
+export function EditKnowledgePointDialog({ knowledgePointId, name, label }: EditKnowledgePointDialogProps) {
   const [error, setError] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const {
@@ -44,13 +47,6 @@ export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePoin
   });
   const router = useRouter();
   const collegeSlug = router.query.slug && typeof router.query.slug === 'string' ? router.query.slug : '';
-
-  const knowledgePoint = api.knowledgePoint.getKnowledgePointById.useQuery(
-    { knowledgePointId },
-    {
-      enabled: !!router.query.kid,
-    }
-  ).data;
 
   const knowledgePointContext = api.useContext().knowledgePoint;
   const updateKnowledgePoint = api.knowledgePoint.updateKnowledgePoint.useMutation({
@@ -92,8 +88,8 @@ export function EditKnowledgePointDialog({ knowledgePointId }: EditKnowledgePoin
 
   function initialDialog() {
     setOpenDialog(true);
-    setValue('label', knowledgePoint?.label || '');
-    setValue('name', knowledgePoint?.name || '');
+    setValue('label', label || '');
+    setValue('name', name || '');
   }
 
   return (

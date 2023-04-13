@@ -22,9 +22,9 @@ async function run() {
     let difficulty: DifficultyType = 'EASY';
     if (randomDifficultyNumber === 1) {
       difficulty = 'EASY';
-    } else if (randomExerciseNumber === 2) {
+    } else if (randomDifficultyNumber === 2) {
       difficulty = 'MEDIUM';
-    } else if (randomExerciseNumber === 3) {
+    } else if (randomDifficultyNumber === 3) {
       difficulty = 'HARD';
     }
 

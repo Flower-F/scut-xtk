@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
+import { EditExerciseDialog } from '~/components/EditExerciseDialog';
 import { difficultyWithoutAllMapping, exerciseTypeWithoutAllMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
 
@@ -78,6 +79,18 @@ export default function ExerciseDetailPage() {
         <Link href={`/college/${collegeSlug}/${exercise.knowledgePoint.id}`} className='underline'>
           <p>{exercise.knowledgePoint.name}</p>
         </Link>
+      </div>
+
+      <div>
+        <EditExerciseDialog
+          exerciseId={exerciseId}
+          answer={exercise.answer}
+          analysis={exercise.analysis || ''}
+          question={exercise.question}
+          options={exercise.options}
+          type={exercise.type}
+          difficulty={exercise.difficulty}
+        />
       </div>
     </div>
   ) : null;

@@ -53,7 +53,7 @@ export function MainNav({ items }: MainNavProps) {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem className='hidden lg:flex'>
-            <Link href='https://www.scut.edu.cn/new/' legacyBehavior passHref>
+            <Link href='https://www.scut.edu.cn/' legacyBehavior passHref>
               <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>学校官网</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
