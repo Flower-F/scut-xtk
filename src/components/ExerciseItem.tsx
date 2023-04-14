@@ -107,7 +107,7 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
 
         <div
           className={cn(
-            'absolute flex items-center justify-center bg-gradient-to-b from-slate-200/60 to-white/90 p-2 dark:bg-gradient-to-b dark:from-slate-900/30 dark:to-slate-900/90',
+            'absolute flex items-center justify-center bg-gradient-to-b from-white to-white p-2 dark:from-slate-900/30 dark:to-slate-900/90',
             isOpened ? 'inset-x-0 bottom-0 h-12' : 'inset-0'
           )}
         >

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 
 import { type NavItem, type NavItemWithChildren } from '~/types/nav';
+import { Icons } from '~/components/Icons';
 import { MainNav } from '~/components/MainNav';
 import { MobileNav } from '~/components/MobileNav';
 import { ThemeToggle } from '~/components/ThemeToggle';
@@ -26,7 +27,7 @@ export function SiteHeader({ mobileNavItems, mainNavItems }: SiteHeaderProps) {
           <nav className='flex items-center space-x-2'>
             <ThemeToggle />
 
-            {sessionData?.user.id ? (
+            {sessionData?.user.id && sessionData.user.verified ? (
               <>
                 <Link href='/user'>
                   <Avatar>
@@ -37,11 +38,15 @@ export function SiteHeader({ mobileNavItems, mainNavItems }: SiteHeaderProps) {
                   </Avatar>
                 </Link>
 
-                <Button onClick={() => void signOut()}>登出</Button>
+                <Button onClick={() => void signOut()} className='gap-2'>
+                  登出
+                  <Icons.LogOut className='h-4 w-4' />
+                </Button>
               </>
             ) : (
-              <Link href='/login' className={cn(buttonVariants())}>
+              <Link href='/login' className={cn(buttonVariants({ variant: 'default' }), 'gap-2')}>
                 登录
+                <Icons.LogIn className='h-4 w-4' />
               </Link>
             )}
           </nav>

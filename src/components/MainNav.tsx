@@ -62,6 +62,11 @@ export function MainNav({ items }: MainNavProps) {
               <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>教务处</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
+          <NavigationMenuItem className='hidden lg:flex'>
+            <Link href='/paper' legacyBehavior passHref>
+              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>组卷</NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>

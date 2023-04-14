@@ -33,7 +33,7 @@ export default function LoginPage({ csrfToken }: InferGetServerSidePropsType<typ
   const { data: sessionData } = useSession();
   const router = useRouter();
 
-  if (sessionData) {
+  if (sessionData?.user.id) {
     void router.push('/');
   }
 

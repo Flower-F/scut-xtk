@@ -5,6 +5,8 @@ import {
   ChevronRight,
   Edit,
   Laptop,
+  LogIn,
+  LogOut,
   Moon,
   PlusCircle,
   Scroll,
@@ -27,4 +29,6 @@ export const Icons = {
   ChevronRight,
   BookmarkPlus,
   BookmarkMinus,
+  LogIn,
+  LogOut,
 };
