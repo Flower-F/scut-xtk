@@ -109,6 +109,35 @@ export const collegeRouter = createTRPCRouter({
       }
     }),
 
+  getCollegeById: publicProcedure
+    .input(z.object({ collegeId: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const { collegeId } = input;
+
+      if (!collegeId) {
+        return null;
+      }
+
+      try {
+        const result = await ctx.prisma.college.findFirst({
+          where: {
+            id: collegeId,
+          },
+          select: {
+            name: true,
+            slug: true,
+          },
+        });
+
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
+
   getCollegeBySlug: publicProcedure
     .input(z.object({ collegeSlug: z.string().optional() }))
     .query(async ({ ctx, input }) => {

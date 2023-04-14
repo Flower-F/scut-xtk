@@ -1,4 +1,4 @@
-import { type ReactElement } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 import Head from 'next/head';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -15,32 +15,9 @@ import { Label } from '~/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/RadioGroup';
 import { difficultyTypeMapping, exerciseTypeMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
+import { standardDifficulty, standardType } from '~/utils/common';
 
-const LIMIT = 10;
-
-function standardDifficulty(difficulty: string | null): DifficultyType | undefined {
-  if (!difficulty) {
-    return 'ANY';
-  }
-
-  if (Object.values(DifficultyType).some((a) => difficulty === a)) {
-    return difficulty as DifficultyType;
-  }
-
-  return 'ANY';
-}
-
-function standardType(type: string | null): ExerciseType | undefined {
-  if (!type) {
-    return 'ALL_QUESTION';
-  }
-
-  if (Object.values(ExerciseType).some((a) => type === a)) {
-    return type as ExerciseType;
-  }
-
-  return 'ALL_QUESTION';
-}
+const LIMIT = 15;
 
 export default function KnowledgePointDetailPage() {
   const router = useRouter();
@@ -74,6 +51,14 @@ export default function KnowledgePointDetailPage() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <>

@@ -1,11 +1,13 @@
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import { type NavItem, type NavItemWithChildren } from '~/types/nav';
 import { MainNav } from '~/components/MainNav';
 import { MobileNav } from '~/components/MobileNav';
 import { ThemeToggle } from '~/components/ThemeToggle';
 import { Avatar, AvatarFallback } from '~/components/ui/Avatar';
+import { cn } from '~/utils/common';
+import { Button, buttonVariants } from './ui/Button';
 
 interface SiteHeaderProps {
   mainNavItems?: NavItem[];
@@ -24,16 +26,24 @@ export function SiteHeader({ mobileNavItems, mainNavItems }: SiteHeaderProps) {
           <nav className='flex items-center space-x-2'>
             <ThemeToggle />
 
-            {sessionData?.user.name ? (
-              <Link href='/user'>
-                <Avatar>
-                  <div className='flex aspect-square h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700'>
-                    {sessionData?.user.name.slice(0, 1)}
-                  </div>
-                  <AvatarFallback />
-                </Avatar>
+            {sessionData?.user.id ? (
+              <>
+                <Link href='/user'>
+                  <Avatar>
+                    <div className='flex aspect-square h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700'>
+                      {sessionData?.user.name.slice(0, 1)}
+                    </div>
+                    <AvatarFallback />
+                  </Avatar>
+                </Link>
+
+                <Button onClick={() => void signOut()}>登出</Button>
+              </>
+            ) : (
+              <Link href='/login' className={cn(buttonVariants())}>
+                登录
               </Link>
-            ) : null}
+            )}
           </nav>
         </div>
       </div>

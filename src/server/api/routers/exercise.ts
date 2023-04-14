@@ -324,25 +324,137 @@ export const exerciseRouter = createTRPCRouter({
 
   bookmarkExercise: protectedProcedure.input(z.object({ exerciseId: z.string() })).mutation(async ({ ctx, input }) => {
     const { exerciseId } = input;
-    await ctx.prisma.bookmark.create({
-      data: {
-        exerciseId,
-        userId: ctx.session.user.id,
-      },
-    });
+
+    try {
+      await ctx.prisma.bookmark.create({
+        data: {
+          exerciseId,
+          userId: ctx.session.user.id,
+        },
+      });
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: '服务器出现未知错误',
+      });
+    }
   }),
 
   removeBookmarkExercise: protectedProcedure
     .input(z.object({ exerciseId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { exerciseId } = input;
-      await ctx.prisma.bookmark.delete({
-        where: {
-          userId_exerciseId: {
-            exerciseId,
-            userId: ctx.session.user.id,
+
+      try {
+        await ctx.prisma.bookmark.delete({
+          where: {
+            userId_exerciseId: {
+              exerciseId,
+              userId: ctx.session.user.id,
+            },
           },
-        },
-      });
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
+
+  getUserBookmarkList: protectedProcedure
+    .input(
+      z.object({
+        keyword: z.string().nullish(),
+        type: z
+          .nativeEnum(ExerciseType, {
+            invalid_type_error: '题目类型只能为填空、选择和大题',
+          })
+          .optional(),
+        difficulty: z
+          .nativeEnum(DifficultyType, {
+            invalid_type_error: '题目难度只能为简单、中等和困难',
+          })
+          .optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { type = 'ALL_QUESTION', difficulty = 'ANY', keyword } = input;
+
+      console.log('ctx.session.user.id,: ', ctx.session.user.id);
+
+      try {
+        const result = await ctx.prisma.exercise.findMany({
+          select: {
+            id: true,
+            type: true,
+            difficulty: true,
+            question: true,
+            answer: true,
+            analysis: true,
+            options: {
+              select: {
+                id: true,
+                content: true,
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            updatedAt: true,
+            bookmarks: {
+              select: {
+                id: true,
+              },
+              where: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+          where: {
+            bookmarks: {
+              some: {
+                userId: {
+                  equals: ctx.session.user.id,
+                },
+              },
+            },
+            type: type !== 'ALL_QUESTION' ? type : undefined,
+            difficulty: difficulty !== 'ANY' ? difficulty : undefined,
+            OR: [
+              {
+                question: {
+                  contains: keyword !== null ? keyword : undefined,
+                },
+              },
+              {
+                answer: {
+                  contains: keyword !== null ? keyword : undefined,
+                },
+              },
+              {
+                knowledgePoint: {
+                  name: {
+                    contains: keyword !== null ? keyword : undefined,
+                  },
+                },
+              },
+            ],
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
     }),
 });

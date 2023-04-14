@@ -21,7 +21,7 @@ export function AdminUserTable() {
   });
 
   return (
-    <div className='mt-10 overflow-auto'>
+    <div className='mt-6 overflow-auto'>
       <table className='w-full'>
         <thead>
           <tr className='m-0 border-t border-slate-300 p-0 even:bg-slate-100 dark:border-slate-700 dark:even:bg-slate-800'>

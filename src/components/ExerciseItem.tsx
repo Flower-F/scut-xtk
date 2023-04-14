@@ -16,8 +16,8 @@ dayjs.extend(relativeTime);
 type ExerciseItem = RouterOutputs['exercise']['getExerciseList']['exerciseList'][number];
 
 interface ExerciseItemProps extends ExerciseItem {
-  knowledgePointId: string;
-  collegeSlug: string;
+  knowledgePointId?: string;
+  collegeSlug?: string;
 }
 
 export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: ExerciseItemProps) {
@@ -26,12 +26,20 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
   const exerciseContext = api.useContext().exercise;
   const bookmarkExercise = api.exercise.bookmarkExercise.useMutation({
     onSuccess: async () => {
-      await exerciseContext.getExerciseList.invalidate();
+      if (knowledgePointId && collegeSlug) {
+        await exerciseContext.getExerciseList.invalidate();
+      } else {
+        await exerciseContext.getUserBookmarkList.invalidate();
+      }
     },
   });
   const removeBookmarkExercise = api.exercise.removeBookmarkExercise.useMutation({
     onSuccess: async () => {
-      await exerciseContext.getExerciseList.invalidate();
+      if (knowledgePointId && collegeSlug) {
+        await exerciseContext.getExerciseList.invalidate();
+      } else {
+        await exerciseContext.getUserBookmarkList.invalidate();
+      }
     },
   });
 
@@ -99,7 +107,7 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
 
         <div
           className={cn(
-            'absolute flex items-center justify-center bg-gradient-to-b from-slate-900/30 to-slate-900/90 p-2',
+            'absolute flex items-center justify-center bg-gradient-to-b from-slate-200/60 to-white/90 p-2 dark:bg-gradient-to-b dark:from-slate-900/30 dark:to-slate-900/90',
             isOpened ? 'inset-x-0 bottom-0 h-12' : 'inset-0'
           )}
         >
@@ -122,15 +130,17 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
           </Button>
         )}
 
-        <div>
-          <Link
-            href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}
-            className={cn(buttonVariants({ variant: 'subtle' }), 'space-x-2')}
-          >
-            <div>查看详情</div>
-            <Icons.ChevronRight className='h-4 w-4' />
-          </Link>
-        </div>
+        {collegeSlug && knowledgePointId ? (
+          <div>
+            <Link
+              href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}
+              className={cn(buttonVariants({ variant: 'subtle' }), 'space-x-2')}
+            >
+              <div>查看详情</div>
+              <Icons.ChevronRight className='h-4 w-4' />
+            </Link>
+          </div>
+        ) : null}
       </div>
     </li>
   );
