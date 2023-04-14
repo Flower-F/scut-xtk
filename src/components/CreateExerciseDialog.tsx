@@ -65,7 +65,7 @@ export function CreateExerciseDialog({ knowledgePointId }: CreateExerciseDialogP
   const createExercise = api.exercise.createExercise.useMutation({
     onSuccess: async () => {
       toast.success('题目创建成功');
-      await exerciseContext.invalidate();
+      await exerciseContext.getExerciseList.invalidate();
       reset();
       setOpenDialog(false);
     },

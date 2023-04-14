@@ -40,7 +40,7 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
     onSuccess: async () => {
       toast.success('课程创建成功');
       await courseContext.invalidate();
-      await knowledgePointContext.invalidate();
+      await knowledgePointContext.getSidebarNavItems.invalidate();
       reset();
       setOpenDialog(false);
     },

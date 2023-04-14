@@ -1,4 +1,6 @@
 import {
+  BookmarkMinus,
+  BookmarkPlus,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -23,4 +25,6 @@ export const Icons = {
   XCircle,
   ChevronLeft,
   ChevronRight,
+  BookmarkPlus,
+  BookmarkMinus,
 };

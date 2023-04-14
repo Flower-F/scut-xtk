@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
 import { EditExerciseDialog } from '~/components/EditExerciseDialog';
+import { Icons } from '~/components/Icons';
 import { Button } from '~/components/ui/Button';
 import { difficultyWithoutAllMapping, exerciseTypeWithoutAllMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
@@ -37,6 +38,29 @@ export default function ExerciseDetailPage() {
 
   async function onDeleteCourse() {
     await deleteExercise.mutateAsync({
+      exerciseId,
+    });
+  }
+
+  const bookmarkExercise = api.exercise.bookmarkExercise.useMutation({
+    onSuccess: async () => {
+      await exerciseContext.getExercise.invalidate();
+    },
+  });
+  const removeBookmarkExercise = api.exercise.removeBookmarkExercise.useMutation({
+    onSuccess: async () => {
+      await exerciseContext.getExercise.invalidate();
+    },
+  });
+
+  async function onBookmark({ exerciseId }: { exerciseId: string }) {
+    await bookmarkExercise.mutateAsync({
+      exerciseId,
+    });
+  }
+
+  async function onRemoveBookmark({ exerciseId }: { exerciseId: string }) {
+    await removeBookmarkExercise.mutateAsync({
       exerciseId,
     });
   }
@@ -104,6 +128,16 @@ export default function ExerciseDetailPage() {
 
       <div className='space-y-4'>
         <div className='flex items-center space-x-4'>
+          {exercise.bookmarks.length > 0 ? (
+            <Button onClick={() => onRemoveBookmark({ exerciseId: exercise.id })}>
+              <Icons.BookmarkMinus className='mr-2 h-5 w-5' /> 取消收藏
+            </Button>
+          ) : (
+            <Button onClick={() => onBookmark({ exerciseId: exercise.id })}>
+              <Icons.BookmarkPlus className='mr-2 h-5 w-5' /> 收藏
+            </Button>
+          )}
+
           <EditExerciseDialog
             exerciseId={exerciseId}
             answer={exercise.answer}

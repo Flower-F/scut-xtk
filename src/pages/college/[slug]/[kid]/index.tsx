@@ -167,6 +167,7 @@ export default function KnowledgePointDetailPage() {
                       question={exercise.question}
                       answer={exercise.answer}
                       analysis={exercise.analysis}
+                      bookmarks={exercise.bookmarks}
                     />
                   );
                 })}

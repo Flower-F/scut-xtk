@@ -10,13 +10,13 @@ export function AdminUserTable() {
   const verifyUser = api.user.verifyUser.useMutation({
     onSuccess: async () => {
       toast.success('用户权限已通过');
-      await useContext.invalidate();
+      await useContext.getUserList.invalidate();
     },
   });
   const banUser = api.user.banUser.useMutation({
     onSuccess: async () => {
       toast.success('用户权限已取消');
-      await useContext.invalidate();
+      await useContext.getUserList.invalidate();
     },
   });
 

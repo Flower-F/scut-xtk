@@ -204,6 +204,14 @@ export const exerciseRouter = createTRPCRouter({
               },
             },
             updatedAt: true,
+            bookmarks: {
+              select: {
+                id: true,
+              },
+              where: {
+                userId: ctx.session.user.id,
+              },
+            },
           },
           orderBy: {
             createdAt: 'desc',
@@ -295,6 +303,11 @@ export const exerciseRouter = createTRPCRouter({
               select: {
                 id: true,
                 name: true,
+              },
+            },
+            bookmarks: {
+              select: {
+                id: true,
               },
             },
           },

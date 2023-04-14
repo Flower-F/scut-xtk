@@ -1,5 +1,5 @@
 import { difficultyWithoutAllMapping, exerciseTypeWithoutAllMapping } from '~/constants/mapping';
-import { type RouterOutputs } from '~/utils/api';
+import { api, type RouterOutputs } from '~/utils/api';
 import 'dayjs/locale/zh-cn';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -23,6 +23,30 @@ interface ExerciseItemProps extends ExerciseItem {
 export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: ExerciseItemProps) {
   const [isOpened, setIsOpened] = useState(false);
 
+  const exerciseContext = api.useContext().exercise;
+  const bookmarkExercise = api.exercise.bookmarkExercise.useMutation({
+    onSuccess: async () => {
+      await exerciseContext.getExerciseList.invalidate();
+    },
+  });
+  const removeBookmarkExercise = api.exercise.removeBookmarkExercise.useMutation({
+    onSuccess: async () => {
+      await exerciseContext.getExerciseList.invalidate();
+    },
+  });
+
+  async function onBookmark() {
+    await bookmarkExercise.mutateAsync({
+      exerciseId: exercise.id,
+    });
+  }
+
+  async function onRemoveBookmark() {
+    await removeBookmarkExercise.mutateAsync({
+      exerciseId: exercise.id,
+    });
+  }
+
   return (
     <li className='flex w-full flex-col space-y-4 rounded-md border border-slate-200 px-6 py-4 dark:border-slate-700'>
       <div className='flex flex-wrap items-end justify-between space-y-2 border-b pb-2'>
@@ -34,6 +58,7 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
             题目类型：{exerciseTypeWithoutAllMapping[exercise.type]}
           </div>
         </div>
+
         <div className='text-sm text-slate-700 dark:text-slate-400'>
           最近更新：{dayjs(exercise.updatedAt).locale('zh-cn').fromNow()}
         </div>
@@ -86,14 +111,26 @@ export function ExerciseItem({ knowledgePointId, collegeSlug, ...exercise }: Exe
         </div>
       </Collapsible>
 
-      <div className='text-right'>
-        <Link
-          href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}
-          className={cn(buttonVariants({ variant: 'subtle' }), 'space-x-2')}
-        >
-          <div>查看详情</div>
-          <Icons.ChevronRight className='h-4 w-4' />
-        </Link>
+      <div className='flex items-center justify-end space-x-4'>
+        {exercise.bookmarks.length > 0 ? (
+          <Button onClick={onRemoveBookmark}>
+            <Icons.BookmarkMinus className='mr-2 h-5 w-5' /> 取消收藏
+          </Button>
+        ) : (
+          <Button onClick={onBookmark}>
+            <Icons.BookmarkPlus className='mr-2 h-5 w-5' /> 收藏
+          </Button>
+        )}
+
+        <div>
+          <Link
+            href={`/college/${collegeSlug}/${knowledgePointId}/${exercise.id}`}
+            className={cn(buttonVariants({ variant: 'subtle' }), 'space-x-2')}
+          >
+            <div>查看详情</div>
+            <Icons.ChevronRight className='h-4 w-4' />
+          </Link>
+        </div>
       </div>
     </li>
   );
