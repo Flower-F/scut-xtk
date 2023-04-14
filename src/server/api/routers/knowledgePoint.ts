@@ -37,7 +37,7 @@ export const knowledgePointRouter = createTRPCRouter({
         },
       });
 
-      for await (const course of courseList) {
+      for (const course of courseList) {
         const knowledgePointList = await ctx.prisma.knowledgePoint.findMany({
           where: {
             courseId: course.id,

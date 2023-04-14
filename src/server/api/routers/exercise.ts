@@ -61,7 +61,7 @@ export const exerciseRouter = createTRPCRouter({
         });
 
         if (options && options.length > 0) {
-          for await (const option of options) {
+          for (const option of options) {
             if (!option) {
               continue;
             }
@@ -307,5 +307,29 @@ export const exerciseRouter = createTRPCRouter({
           message: '服务器出现未知错误',
         });
       }
+    }),
+
+  bookmarkExercise: protectedProcedure.input(z.object({ exerciseId: z.string() })).mutation(async ({ ctx, input }) => {
+    const { exerciseId } = input;
+    await ctx.prisma.bookmark.create({
+      data: {
+        exerciseId,
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
+
+  removeBookmarkExercise: protectedProcedure
+    .input(z.object({ exerciseId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { exerciseId } = input;
+      await ctx.prisma.bookmark.delete({
+        where: {
+          userId_exerciseId: {
+            exerciseId,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
     }),
 });
