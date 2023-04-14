@@ -18,7 +18,7 @@ export const exerciseRouter = createTRPCRouter({
         answer: z.string().nonempty('题目答案不得为空'),
         analysis: z.string().optional(),
         knowledgePointId: z.string().nonempty('知识点id不得为空'),
-        options: z.array(z.object({ content: z.string().nonempty('选项内容不得为空') }).optional()).optional(),
+        options: z.array(z.object({ content: z.string().nonempty('选项内容不得为空') })).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -98,12 +98,13 @@ export const exerciseRouter = createTRPCRouter({
         answer: z.string().nonempty('题目答案不得为空'),
         analysis: z.string().optional(),
         exerciseId: z.string().nonempty('习题id不得为空'),
+        options: z.array(z.object({ content: z.string().nonempty('选项内容不得为空') })),
+        optionIds: z.array(z.string().nonempty('选项id不得为空')),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { type, difficulty, question, answer, exerciseId, analysis } = input;
-
+        const { type, difficulty, question, answer, exerciseId, analysis, options, optionIds } = input;
         await ctx.prisma.exercise.update({
           data: {
             type,
@@ -116,6 +117,20 @@ export const exerciseRouter = createTRPCRouter({
             id: exerciseId,
           },
         });
+
+        for (let i = 0; i < optionIds.length; i++) {
+          const optionId = optionIds[i];
+          const content = options[i]?.content || '';
+
+          await ctx.prisma.option.update({
+            data: {
+              content,
+            },
+            where: {
+              id: optionId,
+            },
+          });
+        }
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',

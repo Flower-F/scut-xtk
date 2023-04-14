@@ -25,13 +25,11 @@ export const createExerciseInputSchema = z.object({
   question: z.string().nonempty('题目内容不得为空'),
   answer: z.string().nonempty('题目答案不得为空'),
   analysis: z.string().optional(),
-  options: z
-    .array(
-      z.object({
-        content: z.string().nonempty('选项内容不得为空'),
-      })
-    )
-    .optional(),
+  options: z.array(
+    z.object({
+      content: z.string().nonempty('选项内容不得为空'),
+    })
+  ),
 });
 
 export type CreateExerciseInput = z.TypeOf<typeof createExerciseInputSchema>;

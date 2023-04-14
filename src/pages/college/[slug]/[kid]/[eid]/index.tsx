@@ -1,10 +1,12 @@
-import { type ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
+import toast from 'react-hot-toast';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
 import { EditExerciseDialog } from '~/components/EditExerciseDialog';
+import { Button } from '~/components/ui/Button';
 import { difficultyWithoutAllMapping, exerciseTypeWithoutAllMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
 
@@ -19,6 +21,25 @@ export default function ExerciseDetailPage() {
       enabled: !!router.query.eid,
     }
   ).data;
+  const [error, setError] = useState('');
+
+  const exerciseContext = api.useContext().exercise;
+  const deleteExercise = api.exercise.deleteExercise.useMutation({
+    onSuccess: async () => {
+      toast.success('习题已删除');
+      await exerciseContext.invalidate();
+      await router.push(`/college/${collegeSlug}/${exercise?.knowledgePoint.id || ''}`);
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+
+  async function onDeleteCourse() {
+    await deleteExercise.mutateAsync({
+      exerciseId,
+    });
+  }
 
   return exercise ? (
     <div className='mt-6 flex w-full flex-col space-y-4 rounded-md border border-slate-200 px-6 py-4 dark:border-slate-700'>
@@ -81,16 +102,24 @@ export default function ExerciseDetailPage() {
         </Link>
       </div>
 
-      <div>
-        <EditExerciseDialog
-          exerciseId={exerciseId}
-          answer={exercise.answer}
-          analysis={exercise.analysis || ''}
-          question={exercise.question}
-          options={exercise.options}
-          type={exercise.type}
-          difficulty={exercise.difficulty}
-        />
+      <div className='space-y-4'>
+        <div className='flex items-center space-x-4'>
+          <EditExerciseDialog
+            exerciseId={exerciseId}
+            answer={exercise.answer}
+            analysis={exercise.analysis || ''}
+            question={exercise.question}
+            options={exercise.options}
+            type={exercise.type}
+            difficulty={exercise.difficulty}
+          />
+
+          <Button variant='destructive' onClick={onDeleteCourse}>
+            删除该习题
+          </Button>
+        </div>
+
+        {error ? <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{error}</div> : null}
       </div>
     </div>
   ) : null;

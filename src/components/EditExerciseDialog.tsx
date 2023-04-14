@@ -20,8 +20,12 @@ export const updateExerciseInputSchema = createExerciseInputSchema;
 
 export type UpdateExerciseInput = z.TypeOf<typeof updateExerciseInputSchema>;
 
-interface EditExerciseDialogProps extends CreateExerciseInput {
+interface EditExerciseDialogProps extends Omit<CreateExerciseInput, 'options'> {
   exerciseId: string;
+  options: {
+    content: string;
+    id: string;
+  }[];
 }
 
 export function EditExerciseDialog({
@@ -40,7 +44,7 @@ export function EditExerciseDialog({
     reset,
     watch,
   } = useForm<UpdateExerciseInput>({
-    resolver: zodResolver(createExerciseInputSchema),
+    resolver: zodResolver(updateExerciseInputSchema),
     defaultValues: {
       options,
     },
@@ -55,11 +59,10 @@ export function EditExerciseDialog({
   const [error, setError] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
 
-  const exerciseContext = api.useContext().exercise;
   const updateExercise = api.exercise.updateExercise.useMutation({
-    onSuccess: async () => {
-      toast.success('题目创建成功');
-      await exerciseContext.invalidate();
+    onSuccess: () => {
+      toast.success('题目内容修改成功');
+      window.location.reload();
       reset();
       setOpenDialog(false);
     },
@@ -72,6 +75,7 @@ export function EditExerciseDialog({
     await updateExercise.mutateAsync({
       ...input,
       exerciseId,
+      optionIds: options?.map((item) => item.id) || [],
     });
   }
 
@@ -155,7 +159,7 @@ export function EditExerciseDialog({
                 ) : null}
               </div>
 
-              {watchExerciseType === 'CHOICE_QUESTION' ? (
+              {(!watchExerciseType && type === 'CHOICE_QUESTION') || watchExerciseType === 'CHOICE_QUESTION' ? (
                 <div className='grid w-full items-center gap-1.5'>
                   <Label htmlFor='option'>选择题选项</Label>
                   {fields.map((field, index) => (
@@ -163,7 +167,6 @@ export function EditExerciseDialog({
                       <Controller
                         name={`options.${index}.content`}
                         control={control}
-                        // defaultValue=''
                         render={({ field }) => {
                           return (
                             <div className='flex items-center space-x-3'>
