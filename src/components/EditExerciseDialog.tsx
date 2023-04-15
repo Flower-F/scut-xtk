@@ -82,7 +82,7 @@ export function EditExerciseDialog({
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
-        <Button>修改习题信息</Button>
+        <Button className='shrink-0'>修改习题信息</Button>
       </DialogTrigger>
 
       <DialogContent className='max-w-sm py-10'>

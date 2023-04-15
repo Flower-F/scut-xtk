@@ -98,7 +98,7 @@ export default function UserPage() {
                   type='search'
                   name='keyword'
                   className='w-full'
-                  placeholder='请输入题目的关键词（知识点、题目、答案等）'
+                  placeholder='请输入题目或答案的关键词'
                   defaultValue={keyword || ''}
                 />
                 <Button className='shrink-0' type='submit'>

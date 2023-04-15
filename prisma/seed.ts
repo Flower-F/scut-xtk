@@ -36,7 +36,7 @@ async function run() {
       question: faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 4 })),
       answer: faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 8 })),
       analysis: hasAnalysis ? faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 4 })) : null,
-      knowledgePoint: {
+      knowledgePoints: {
         connect: {
           id: 'clgc3zpyf0002sphsnllscdvb',
         },

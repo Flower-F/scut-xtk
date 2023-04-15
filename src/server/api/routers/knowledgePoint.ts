@@ -63,6 +63,53 @@ export const knowledgePointRouter = createTRPCRouter({
       return result;
     }),
 
+  getKnowledgePointListInOneCourse: protectedProcedure
+    .input(
+      z.object({
+        knowledgePointId: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { knowledgePointId } = input;
+
+      if (!knowledgePointId) {
+        return {
+          knowledgePoints: [],
+        };
+      }
+
+      try {
+        const knowledgePoint = await ctx.prisma.knowledgePoint.findFirst({
+          where: {
+            id: knowledgePointId,
+          },
+        });
+
+        if (!knowledgePoint) {
+          throw new TRPCError({
+            code: 'PRECONDITION_FAILED',
+            message: '不存在对应id的知识点',
+          });
+        }
+
+        const result = await ctx.prisma.course.findFirst({
+          where: {
+            id: knowledgePoint.courseId,
+          },
+          select: {
+            knowledgePoints: true,
+          },
+        });
+
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
+
   createKnowledgePoint: protectedProcedure
     .input(
       z.object({

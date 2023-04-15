@@ -81,7 +81,7 @@ export function EditCollegeDialog({ name, collegeId, collegeSlug }: EditCollegeD
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button variant='subtle' size='lg' className='w-full text-base' onClick={() => setOpenDialog(true)}>
+        <Button variant='subtle' size='lg' className='w-full shrink-0 text-base' onClick={() => setOpenDialog(true)}>
           {name}
         </Button>
       </DialogTrigger>

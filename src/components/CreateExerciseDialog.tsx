@@ -84,7 +84,7 @@ export function CreateExerciseDialog({ knowledgePointId }: CreateExerciseDialogP
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
-        <Button>新增习题</Button>
+        <Button className='shrink-0'>新增习题</Button>
       </DialogTrigger>
 
       <DialogContent className='max-w-sm py-10'>

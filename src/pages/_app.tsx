@@ -9,6 +9,7 @@ import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 
+import { PaperSheet } from '~/components/PaperSheet';
 import { TooltipProvider } from '~/components/ui/Tooltip';
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
@@ -26,6 +27,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWith
     <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
       <TooltipProvider>
         <Toaster />
+        <PaperSheet />
         <SessionProvider session={session}>{getLayout(<Component {...pageProps} />)}</SessionProvider>
       </TooltipProvider>
     </ThemeProvider>

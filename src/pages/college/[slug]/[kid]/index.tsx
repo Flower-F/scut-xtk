@@ -13,6 +13,7 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/RadioGroup';
+import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/Tooltip';
 import { difficultyTypeMapping, exerciseTypeMapping } from '~/constants/mapping';
 import { api } from '~/utils/api';
 import { standardDifficulty, standardType } from '~/utils/common';
@@ -68,9 +69,12 @@ export default function KnowledgePointDetailPage() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div>
-        <div className='flex w-full items-center justify-between'>
-          <h3 className='scroll-m-20 py-6 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
-            {knowledgePointName}
+        <div className='flex w-full flex-wrap items-center justify-between py-4'>
+          <h3 className='max-w-[600px] scroll-m-20 truncate py-4 text-center text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700'>
+            <Tooltip>
+              <TooltipTrigger className='inline-block w-full truncate'>{knowledgePointName}</TooltipTrigger>
+              <TooltipContent>{knowledgePointName}</TooltipContent>
+            </Tooltip>
           </h3>
 
           <div className='flex items-center space-x-3'>
@@ -117,7 +121,7 @@ export default function KnowledgePointDetailPage() {
               type='search'
               name='keyword'
               className='w-full'
-              placeholder='请输入题目的关键词（知识点、题目、答案等）'
+              placeholder='请输入题目或答案的关键词'
               defaultValue={keyword || ''}
             />
             <Button className='shrink-0' type='submit'>

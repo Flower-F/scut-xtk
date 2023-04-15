@@ -47,7 +47,7 @@ export const exerciseRouter = createTRPCRouter({
             question,
             answer,
             analysis,
-            knowledgePoint: {
+            knowledgePoints: {
               connect: {
                 id: knowledgePointId,
               },
@@ -218,25 +218,24 @@ export const exerciseRouter = createTRPCRouter({
           },
           take: limit + 1,
           where: {
-            knowledgePointId,
+            knowledgePoints: {
+              some: {
+                id: {
+                  equals: knowledgePointId,
+                },
+              },
+            },
             type: type !== 'ALL_QUESTION' ? type : undefined,
             difficulty: difficulty !== 'ANY' ? difficulty : undefined,
             OR: [
               {
                 question: {
-                  contains: keyword !== null ? keyword : undefined,
+                  contains: keyword ? keyword : '',
                 },
               },
               {
                 answer: {
-                  contains: keyword !== null ? keyword : undefined,
-                },
-              },
-              {
-                knowledgePoint: {
-                  name: {
-                    contains: keyword !== null ? keyword : undefined,
-                  },
+                  contains: keyword ? keyword : '',
                 },
               },
             ],
@@ -299,7 +298,7 @@ export const exerciseRouter = createTRPCRouter({
             difficulty: true,
             createdAt: true,
             updatedAt: true,
-            knowledgePoint: {
+            knowledgePoints: {
               select: {
                 id: true,
                 name: true,
@@ -381,8 +380,6 @@ export const exerciseRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { type = 'ALL_QUESTION', difficulty = 'ANY', keyword } = input;
 
-      console.log('ctx.session.user.id,: ', ctx.session.user.id);
-
       try {
         const result = await ctx.prisma.exercise.findMany({
           select: {
@@ -427,19 +424,12 @@ export const exerciseRouter = createTRPCRouter({
             OR: [
               {
                 question: {
-                  contains: keyword !== null ? keyword : undefined,
+                  contains: keyword ? keyword : '',
                 },
               },
               {
                 answer: {
-                  contains: keyword !== null ? keyword : undefined,
-                },
-              },
-              {
-                knowledgePoint: {
-                  name: {
-                    contains: keyword !== null ? keyword : undefined,
-                  },
+                  contains: keyword ? keyword : '',
                 },
               },
             ],
@@ -456,5 +446,29 @@ export const exerciseRouter = createTRPCRouter({
           message: '服务器出现未知错误',
         });
       }
+    }),
+
+  addNewKnowledgePoint: protectedProcedure
+    .input(
+      z.object({
+        knowledgePointId: z.string().nonempty('知识点id不得为空'),
+        exerciseId: z.string().nonempty('习题id不得为空'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { knowledgePointId, exerciseId } = input;
+
+      await ctx.prisma.exercise.update({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          knowledgePoints: {
+            connect: {
+              id: knowledgePointId,
+            },
+          },
+        },
+      });
     }),
 });

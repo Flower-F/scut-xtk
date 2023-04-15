@@ -59,7 +59,7 @@ export function CreateCourseDialog({ collegeSlug }: CreateCourseDialogProps) {
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
-        <Button className='gap-2 text-base' size='lg'>
+        <Button className='shrink-0 gap-2 text-base' size='lg'>
           <Icons.PlusCircle /> 添加课程
         </Button>
       </DialogTrigger>

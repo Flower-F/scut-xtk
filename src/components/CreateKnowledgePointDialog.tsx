@@ -56,7 +56,7 @@ export function CreateKnowledgePointDialog({ courseId }: CreateKnowledgePointDia
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
-        <Button className='w-full' variant='subtle'>
+        <Button className='w-full shrink-0' variant='subtle'>
           添加知识点
         </Button>
       </DialogTrigger>

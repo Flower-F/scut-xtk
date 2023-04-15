@@ -111,14 +111,12 @@ model Exercise {
   answer     String         @db.Text // 答案
   analysis   String?        @db.Text // 解析
 
-  knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  knowledgePointId String
-
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String?
 
-  bookmarks Bookmark[]
-  options   Option[]
+  bookmarks       Bookmark[]
+  options         Option[]
+  knowledgePoints KnowledgePoint[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -137,3 +135,7 @@ model Bookmark {
 
   @@unique([userId, exerciseId])
 }
+
+// model Paper {
+
+// }

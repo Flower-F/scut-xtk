@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 
 import { SidebarLayout } from '~/layouts/SidebarLayout';
+import { AddNewKnowledgePointDialog } from '~/components/AddNewKnowledgePointDialog';
 import { EditExerciseDialog } from '~/components/EditExerciseDialog';
 import { Icons } from '~/components/Icons';
 import { Button } from '~/components/ui/Button';
@@ -29,7 +30,7 @@ export default function ExerciseDetailPage() {
     onSuccess: async () => {
       toast.success('习题已删除');
       await exerciseContext.invalidate();
-      await router.push(`/college/${collegeSlug}/${exercise?.knowledgePoint.id || ''}`);
+      await router.push(`/college/${collegeSlug}`);
     },
     onError: (err) => {
       setError(err.message);
@@ -121,9 +122,18 @@ export default function ExerciseDetailPage() {
 
       <div>
         <div className='text-lg font-semibold'>关联知识点：</div>
-        <Link href={`/college/${collegeSlug}/${exercise.knowledgePoint.id}`} className='underline'>
-          <p>{exercise.knowledgePoint.name}</p>
-        </Link>
+
+        {exercise.knowledgePoints.length ? (
+          <ul className='flex items-center gap-2'>
+            {exercise.knowledgePoints.map((knowledgePoint) => (
+              <li key={knowledgePoint.id}>
+                <Link href={`/college/${collegeSlug}/${knowledgePoint.id}`} className='underline'>
+                  <p>{knowledgePoint.name}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
 
       <div className='space-y-4'>
@@ -148,9 +158,14 @@ export default function ExerciseDetailPage() {
             difficulty={exercise.difficulty}
           />
 
-          <Button variant='destructive' onClick={onDeleteCourse}>
+          <Button variant='destructive' onClick={onDeleteCourse} className='shrink-0'>
             删除该习题
           </Button>
+
+          <AddNewKnowledgePointDialog
+            exerciseId={exerciseId}
+            oldKnowledgePointIds={exercise.knowledgePoints.map((item) => item.id)}
+          />
         </div>
 
         {error ? <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{error}</div> : null}

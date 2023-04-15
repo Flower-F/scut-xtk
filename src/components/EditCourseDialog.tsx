@@ -84,7 +84,7 @@ export function EditCourseDialog({ name, courseId }: EditCourseDialogProps) {
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button variant='subtle' className='text-base' size='lg' onClick={() => setOpenDialog(true)}>
+        <Button variant='subtle' className='shrink-0 text-base' size='lg' onClick={() => setOpenDialog(true)}>
           {name}
         </Button>
       </DialogTrigger>

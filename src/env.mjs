@@ -7,11 +7,13 @@ import { z } from 'zod';
 const server = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
-  NEXTAUTH_SECRET: process.env.NODE_ENV === 'production' ? z.string().min(1) : z.string().min(1).optional(),
+  NEXTAUTH_SECRET:
+    process.env.NODE_ENV === 'production'
+      ? z.string().nonempty('NEXTAUTH_SECRET 不得为空')
+      : z.string().nonempty('NEXTAUTH_SECRET 不得为空').optional(),
   NEXTAUTH_URL: z.string().url(),
-  // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
-  ADMIN_EMAIL: z.string().min(1),
-  ADMIN_PASSWORD: z.string().min(1),
+  ADMIN_EMAIL: z.string().email('请输入正确的管理员邮箱').nonempty('管理员邮箱不得为空'),
+  ADMIN_PASSWORD: z.string().nonempty('管理员密码不得为空'),
 });
 
 /**
