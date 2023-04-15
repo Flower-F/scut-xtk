@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -33,19 +34,6 @@ export const collegeRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { name, collegeSlug } = input;
 
-      const college = await ctx.prisma.college.findFirst({
-        where: {
-          slug: collegeSlug,
-        },
-      });
-
-      if (college) {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: '该标识符已存在',
-        });
-      }
-
       try {
         await ctx.prisma.college.create({
           data: {
@@ -54,6 +42,13 @@ export const collegeRouter = createTRPCRouter({
           },
         });
       } catch (error) {
+        if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: '该slug已存在对应的学院',
+          });
+        }
+
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: '服务器出现未知错误',
