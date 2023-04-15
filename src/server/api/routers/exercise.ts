@@ -99,12 +99,11 @@ export const exerciseRouter = createTRPCRouter({
         analysis: z.string().optional(),
         exerciseId: z.string().nonempty('习题id不得为空'),
         options: z.array(z.object({ content: z.string().nonempty('选项内容不得为空') })),
-        optionIds: z.array(z.string().nonempty('选项id不得为空')),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { type, difficulty, question, answer, exerciseId, analysis, options, optionIds } = input;
+        const { type, difficulty, question, answer, exerciseId, analysis, options } = input;
         await ctx.prisma.exercise.update({
           data: {
             type,
@@ -118,18 +117,28 @@ export const exerciseRouter = createTRPCRouter({
           },
         });
 
-        for (let i = 0; i < optionIds.length; i++) {
-          const optionId = optionIds[i];
-          const content = options[i]?.content || '';
+        await ctx.prisma.option.deleteMany({
+          where: {
+            exerciseId,
+          },
+        });
 
-          await ctx.prisma.option.update({
-            data: {
-              content,
-            },
-            where: {
-              id: optionId,
-            },
-          });
+        if (options && options.length > 0) {
+          for (const option of options) {
+            if (!option) {
+              continue;
+            }
+            await ctx.prisma.option.create({
+              data: {
+                content: option.content,
+                exercise: {
+                  connect: {
+                    id: exerciseId,
+                  },
+                },
+              },
+            });
+          }
         }
       } catch (error) {
         throw new TRPCError({
@@ -163,9 +172,7 @@ export const exerciseRouter = createTRPCRouter({
       z.object({
         knowledgePointId: z.string().nonempty('知识点id不得为空'),
         cursor: z.string().nullish(),
-        limit: z.number({
-          invalid_type_error: '请输入分页的数据大小',
-        }),
+        limit: z.number().int('分页数据大小必须是整数'),
         type: z
           .nativeEnum(ExerciseType, {
             invalid_type_error: '题目类型只能为填空、选择和大题',

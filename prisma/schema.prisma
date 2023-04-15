@@ -14,12 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Example {
-//   id        String   @id @default(cuid())
-// createdAt DateTime @default(now())
-// updatedAt DateTime @updatedAt
-// }
-
 enum Role {
   USER
   ADMIN
@@ -27,18 +21,20 @@ enum Role {
 
 // Necessary for Next auth
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  verified  Boolean  @default(false)
-  image     String?
-  role      Role     @default(USER)
-  collegeId String?
-  college   College? @relation(fields: [collegeId], references: [id], onUpdate: Cascade)
+  id       String  @id @default(cuid())
+  name     String
+  email    String  @unique
+  password String
+  verified Boolean @default(false)
+  image    String?
+  role     Role    @default(USER)
+  paper    Paper?
 
   bookmarks Bookmark[]
   exercises Exercise[]
+
+  collegeId String?
+  college   College? @relation(fields: [collegeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,22 +53,27 @@ model College {
 }
 
 model Course {
-  id        String  @id @default(cuid())
-  name      String
-  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  collegeId String
+  id   String @id @default(cuid())
+  name String
 
   knowledgePoints KnowledgePoint[]
+
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model KnowledgePoint {
-  id       String  @id @default(cuid())
-  name     String
-  course   Course  @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  courseId String
-  label    String? // 标签
+  id    String  @id @default(cuid())
+  name  String
+  label String? // 标签
 
   exercises Exercise[]
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,8 +97,8 @@ model Option {
   id      String @id @default(cuid())
   content String
 
-  exercise   Exercise? @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   exerciseId String?
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -111,24 +112,27 @@ model Exercise {
   answer     String         @db.Text // 答案
   analysis   String?        @db.Text // 解析
 
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String?
-
   bookmarks       Bookmark[]
   options         Option[]
   knowledgePoints KnowledgePoint[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // 题目作者
+
+  paperId String?
+  paper   Paper?  @relation(fields: [paperId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Bookmark {
-  id         String @id @default(cuid())
-  userId     String
-  exerciseId String
+  id String @id @default(cuid())
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,6 +140,29 @@ model Bookmark {
   @@unique([userId, exerciseId])
 }
 
-// model Paper {
+model ExerciseRule {
+  id String @id @default(cuid())
 
-// }
+  type       ExerciseType // 规则的题目类型
+  difficulty DifficultyType // 规则的难度类型
+  amount     Int // 该规则下的题目有多少组
+
+  paper   Paper?  @relation(fields: [paperId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  paperId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Paper {
+  id String @id @default(cuid())
+
+  exercises Exercise[] // 试题
+  rules     ExerciseRule[] // 试题规则
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

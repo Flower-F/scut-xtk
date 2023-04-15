@@ -20,12 +20,8 @@ export const updateExerciseInputSchema = createExerciseInputSchema;
 
 export type UpdateExerciseInput = z.TypeOf<typeof updateExerciseInputSchema>;
 
-interface EditExerciseDialogProps extends Omit<CreateExerciseInput, 'options'> {
+interface EditExerciseDialogProps extends CreateExerciseInput {
   exerciseId: string;
-  options: {
-    content: string;
-    id: string;
-  }[];
 }
 
 export function EditExerciseDialog({
@@ -75,7 +71,6 @@ export function EditExerciseDialog({
     await updateExercise.mutateAsync({
       ...input,
       exerciseId,
-      optionIds: options?.map((item) => item.id) || [],
     });
   }
 
