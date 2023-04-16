@@ -48,7 +48,7 @@ export function AddNewKnowledgePointDialog({ exerciseId, oldKnowledgePointIds }:
   const knowledgePointList =
     api.knowledgePoint.getKnowledgePointListInOneCourse.useQuery({
       knowledgePointId: oldKnowledgePointIds[0],
-    }).data?.knowledgePoints || [];
+    }).data || [];
 
   async function onAddNewKnowledgePoint(input: AddNewKnowledgePointInput) {
     await addNewKnowledgePoint.mutateAsync({

@@ -99,7 +99,7 @@ export function CreateExerciseDialog({ knowledgePointId }: CreateExerciseDialogP
                 <Controller
                   name='type'
                   control={control}
-                  defaultValue={ExerciseType.COMPLETION_QUESTION}
+                  defaultValue='COMPLETION_QUESTION'
                   render={({ field: { name, value, onChange } }) => (
                     <Select onValueChange={onChange} value={value} name={name}>
                       <SelectTrigger id='type'>
@@ -125,7 +125,7 @@ export function CreateExerciseDialog({ knowledgePointId }: CreateExerciseDialogP
                 <Controller
                   name='difficulty'
                   control={control}
-                  defaultValue={DifficultyType.EASY}
+                  defaultValue='EASY'
                   render={({ field: { name, value, onChange } }) => (
                     <Select onValueChange={onChange} value={value} name={name}>
                       <SelectTrigger id='difficulty'>
@@ -163,7 +163,7 @@ export function CreateExerciseDialog({ knowledgePointId }: CreateExerciseDialogP
 
               {watchExerciseType === 'CHOICE_QUESTION' ? (
                 <div className='grid w-full items-center gap-1.5'>
-                  <Label htmlFor='option'>选择题选项</Label>
+                  <Label>选择题选项</Label>
                   {fields.map((field, index) => (
                     <div key={field.id} className='grid w-full items-center gap-1.5'>
                       <Controller

@@ -64,7 +64,7 @@ export function MainNav({ items }: MainNavProps) {
           </NavigationMenuItem>
           <NavigationMenuItem className='hidden lg:flex'>
             <Link href='/paper' legacyBehavior passHref>
-              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>组卷</NavigationMenuLink>
+              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'h-9')}>快速组卷</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>

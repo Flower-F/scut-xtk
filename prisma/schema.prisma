@@ -33,8 +33,8 @@ model User {
   bookmarks Bookmark[]
   exercises Exercise[]
 
-  collegeId String?
-  college   College? @relation(fields: [collegeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  collegeId String
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -74,6 +74,8 @@ model KnowledgePoint {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  exerciseRule ExerciseRule?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -116,9 +118,8 @@ model Exercise {
   options         Option[]
   knowledgePoints KnowledgePoint[]
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // 题目作者
-
+  userId  String?
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade) // 题目作者
   paperId String?
   paper   Paper?  @relation(fields: [paperId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -147,8 +148,11 @@ model ExerciseRule {
   difficulty DifficultyType // 规则的难度类型
   amount     Int // 该规则下的题目有多少组
 
-  paper   Paper?  @relation(fields: [paperId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  paperId String?
+  knowledgePointId String         @unique
+  knowledgePoint   KnowledgePoint @relation(fields: [knowledgePointId], references: [id]) // 题目知识点
+
+  paperId String
+  paper   Paper  @relation(fields: [paperId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

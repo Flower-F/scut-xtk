@@ -46,6 +46,40 @@ export const courseRouter = createTRPCRouter({
       }
     }),
 
+  getCourseListOfUserCollege: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const college = await ctx.prisma.college.findFirst({
+        where: {
+          id: ctx.session.user.collegeId,
+        },
+      });
+
+      if (!college || !college.id) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: '不存在该学院标识对应的学院',
+        });
+      }
+
+      const result = await ctx.prisma.course.findMany({
+        where: {
+          collegeId: college.id,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+
+      return result;
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: '服务器出现未知错误',
+      });
+    }
+  }),
+
   createCourse: protectedProcedure
     .input(
       z.object({

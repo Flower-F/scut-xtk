@@ -63,6 +63,35 @@ export const knowledgePointRouter = createTRPCRouter({
       return result;
     }),
 
+  getKnowledgePointListByCourseId: protectedProcedure
+    .input(
+      z.object({
+        courseId: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { courseId } = input;
+
+      if (!courseId) {
+        return [];
+      }
+
+      try {
+        const result = await ctx.prisma.knowledgePoint.findMany({
+          where: {
+            courseId,
+          },
+        });
+
+        return result;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: '服务器出现未知错误',
+        });
+      }
+    }),
+
   getKnowledgePointListInOneCourse: protectedProcedure
     .input(
       z.object({
@@ -73,9 +102,7 @@ export const knowledgePointRouter = createTRPCRouter({
       const { knowledgePointId } = input;
 
       if (!knowledgePointId) {
-        return {
-          knowledgePoints: [],
-        };
+        return [];
       }
 
       try {
@@ -92,12 +119,13 @@ export const knowledgePointRouter = createTRPCRouter({
           });
         }
 
-        const result = await ctx.prisma.course.findFirst({
+        const result = await ctx.prisma.knowledgePoint.findMany({
           where: {
-            id: knowledgePoint.courseId,
+            courseId: knowledgePoint.courseId,
           },
           select: {
-            knowledgePoints: true,
+            id: true,
+            name: true,
           },
         });
 

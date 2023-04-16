@@ -38,12 +38,12 @@ async function run() {
       analysis: hasAnalysis ? faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 4 })) : null,
       knowledgePoints: {
         connect: {
-          id: 'clgc3zpyf0002sphsnllscdvb',
+          id: 'clgj2ic5e0002spopfj59lijb',
         },
       },
       user: {
         connect: {
-          id: 'clg22p4io0002spv92q3pyvx2',
+          id: 'clgj2kimq0004spopdk44kvz9',
         },
       },
     };

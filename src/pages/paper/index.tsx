@@ -1,11 +1,14 @@
 import { type ReactElement } from 'react';
 
 import { MainLayout } from '~/layouts/MainLayout';
+import { CreateAndUpdateRuleForm } from '~/components/CreateAndUpdateRuleForm';
 
 export default function PaperPage() {
   return (
     <div>
-      <div></div>
+      <div>
+        <CreateAndUpdateRuleForm />
+      </div>
     </div>
   );
 }

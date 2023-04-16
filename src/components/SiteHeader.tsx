@@ -7,6 +7,7 @@ import { MainNav } from '~/components/MainNav';
 import { MobileNav } from '~/components/MobileNav';
 import { ThemeToggle } from '~/components/ThemeToggle';
 import { Avatar, AvatarFallback } from '~/components/ui/Avatar';
+import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/Tooltip';
 import { cn } from '~/utils/common';
 import { Button, buttonVariants } from './ui/Button';
 
@@ -27,18 +28,23 @@ export function SiteHeader({ mobileNavItems, mainNavItems }: SiteHeaderProps) {
           <nav className='flex items-center space-x-2'>
             <ThemeToggle />
 
-            {sessionData?.user.id && sessionData.user.verified ? (
+            {sessionData?.user.id ? (
               <>
-                <Link href='/user'>
-                  <Avatar>
-                    <div className='flex aspect-square h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700'>
-                      {sessionData?.user.name.slice(0, 1)}
-                    </div>
-                    <AvatarFallback />
-                  </Avatar>
-                </Link>
+                <Tooltip>
+                  <TooltipTrigger className='inline-block w-full truncate text-left'>
+                    <Link href='/user'>
+                      <Avatar>
+                        <div className='flex aspect-square h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700'>
+                          {sessionData?.user.name.slice(0, 1)}
+                        </div>
+                        <AvatarFallback />
+                      </Avatar>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>个人主页</TooltipContent>
+                </Tooltip>
 
-                <Button onClick={() => void signOut()} className='gap-2'>
+                <Button onClick={() => void signOut()} className='shrink-0 gap-2'>
                   登出
                   <Icons.LogOut className='h-4 w-4' />
                 </Button>

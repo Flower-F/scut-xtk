@@ -61,11 +61,8 @@ export const exerciseRouter = createTRPCRouter({
         });
 
         if (options && options.length > 0) {
-          for (const option of options) {
-            if (!option) {
-              continue;
-            }
-            await ctx.prisma.option.create({
+          const createOptions = options.map((option) => {
+            return ctx.prisma.option.create({
               data: {
                 content: option.content,
                 exercise: {
@@ -75,7 +72,9 @@ export const exerciseRouter = createTRPCRouter({
                 },
               },
             });
-          }
+          });
+
+          await ctx.prisma.$transaction(createOptions);
         }
       } catch (error) {
         throw new TRPCError({
@@ -123,12 +122,9 @@ export const exerciseRouter = createTRPCRouter({
           },
         });
 
-        if (options && options.length > 0) {
-          for (const option of options) {
-            if (!option) {
-              continue;
-            }
-            await ctx.prisma.option.create({
+        if (options.length > 0) {
+          const createOptions = options.map((option) => {
+            return ctx.prisma.option.create({
               data: {
                 content: option.content,
                 exercise: {
@@ -138,7 +134,9 @@ export const exerciseRouter = createTRPCRouter({
                 },
               },
             });
-          }
+          });
+
+          await ctx.prisma.$transaction(createOptions);
         }
       } catch (error) {
         throw new TRPCError({

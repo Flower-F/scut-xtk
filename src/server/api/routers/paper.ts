@@ -16,7 +16,8 @@ export const paperRouter = createTRPCRouter({
             difficulty: z.nativeEnum(DifficultyType, {
               invalid_type_error: '题目难度只能为简单、中等和困难',
             }),
-            amount: z.number().int('题目数量必须为整数'),
+            amount: z.number().int('题目数量必须为整数').positive('题目数量必须为正数'),
+            knowledgePointId: z.string().nonempty('知识点id不得为空'),
           })
         ),
       })
@@ -25,16 +26,51 @@ export const paperRouter = createTRPCRouter({
       const { rules } = input;
 
       try {
-        for (const rule of rules) {
-          await ctx.prisma.exerciseRule.create({
+        const paper = await ctx.prisma.paper.findFirst({
+          where: {
+            userId: ctx.session.user.id,
+          },
+        });
+
+        let paperId = paper?.id;
+
+        if (!paperId) {
+          const paper = await ctx.prisma.paper.create({
+            data: {
+              user: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          });
+
+          paperId = paper.id;
+        }
+
+        const createExerciseRules = rules.map((rule) => {
+          return ctx.prisma.exerciseRule.create({
             data: {
               type: rule.type,
               difficulty: rule.difficulty,
               amount: rule.amount,
+              knowledgePoint: {
+                connect: {
+                  id: rule.knowledgePointId,
+                },
+              },
+              paper: {
+                connect: {
+                  id: paperId,
+                },
+              },
             },
           });
-        }
+        });
+
+        await ctx.prisma.$transaction(createExerciseRules);
       } catch (error) {
+        console.log('error: ', error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: '服务器出现未知错误',
@@ -54,6 +90,7 @@ export const paperRouter = createTRPCRouter({
               invalid_type_error: '题目难度只能为简单、中等和困难',
             }),
             amount: z.number().int('题目数量必须为整数'),
+            knowledgePointId: z.string().nonempty('知识点id不得为空'),
           })
         ),
       })
@@ -68,15 +105,49 @@ export const paperRouter = createTRPCRouter({
           },
         });
 
-        for (const rule of rules) {
-          await ctx.prisma.exerciseRule.create({
+        const paper = await ctx.prisma.paper.findFirst({
+          where: {
+            userId: ctx.session.user.id,
+          },
+        });
+
+        let paperId = paper?.id;
+
+        if (!paperId) {
+          const paper = await ctx.prisma.paper.create({
+            data: {
+              user: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          });
+
+          paperId = paper.id;
+        }
+
+        const createExerciseRules = rules.map((rule) => {
+          return ctx.prisma.exerciseRule.create({
             data: {
               type: rule.type,
               difficulty: rule.difficulty,
               amount: rule.amount,
+              paper: {
+                connect: {
+                  id: paperId,
+                },
+              },
+              knowledgePoint: {
+                connect: {
+                  id: rule.knowledgePointId,
+                },
+              },
             },
           });
-        }
+        });
+
+        await ctx.prisma.$transaction(createExerciseRules);
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
