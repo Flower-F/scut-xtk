@@ -81,6 +81,9 @@ export default function LoginPage({ csrfToken }: InferGetServerSidePropsType<typ
               control={control}
               render={({ field }) => <Input type='password' id='password' placeholder='请输入您的密码' {...field} />}
             />
+            {errors.password ? (
+              <div className='text-sm font-semibold text-red-500 dark:text-red-700'>{errors.password.message}</div>
+            ) : null}
           </div>
 
           {loginError ? (

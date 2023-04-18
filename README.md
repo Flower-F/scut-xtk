@@ -22,19 +22,19 @@
 The relationship of major, knowledge point and questions: each major has a lot of knowledge point, and each knowledge point is related to a lot of questions.
 
 - User Module
-  - [] Register & Login & Logout
-  - [] Permission management(Special admin user and Normal user)
+  - [x] Register & Login & Logout
+  - [x] Permission management(Special admin user and Normal user)
   - [ ] Personal Center
-  - [] Question favorites
+  - [x] Question favorites
 - College Module
-  - [] Basic CRUD
+  - [x] Basic CRUD
 - Course Module
-  - [] Basic CRUD
+  - [x] Basic CRUD
 - KnowledgePoint Module
-  - [] Basic CRUD
+  - [x] Basic CRUD
 - Question Module
-  - [] Basic CRUD
-  - [] Filter questions based on some attributes like the difficulty and type
+  - [x] Basic CRUD
+  - [x] Filter questions based on some attributes like the difficulty and type
 - Paper Module
   - [ ] One click to generate a paper based on the settings
   - [ ] Pick the questions you want and combine them into a paper
