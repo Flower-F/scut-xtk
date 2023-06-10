@@ -3,7 +3,7 @@ import { DifficultyType, ExerciseType, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const EXERCISE_AMOUNT = 60;
+const EXERCISE_AMOUNT = 300;
 
 async function run() {
   const exerciseListData = new Array(EXERCISE_AMOUNT).fill(null).map(() => {
@@ -38,12 +38,12 @@ async function run() {
       analysis: hasAnalysis ? faker.lorem.paragraph(faker.datatype.number({ min: 1, max: 4 })) : null,
       knowledgePoints: {
         connect: {
-          id: 'clgj2ic5e0002spopfj59lijb',
+          id: 'clhh61za10004spq8nrtlabhi',
         },
       },
       user: {
         connect: {
-          id: 'clgj2kimq0004spopdk44kvz9',
+          id: 'clhh618360000spq8y3ac31fi',
         },
       },
     };
